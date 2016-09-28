@@ -21,7 +21,7 @@ namespace recode.net
 	/// </summary>
 	public partial class MainForm : Form
 	{
-		private string version = "2015-05-07 dev";
+		private string version = "2016-08-17 dev";
 		private bool isEncoding = false;
 		private int iEncoding = 0;
 		private ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -60,8 +60,13 @@ namespace recode.net
 			cboATrack.SelectedIndex = 0;
 			cboSTrack.SelectedIndex = 0;
 
-			// Tooltips
-			ToolTip toolTip1 = new ToolTip();
+            // Process events
+            exeProcess.Exited += new EventHandler(myProcess_Exited);
+            exeProcess.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
+            exeProcess.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
+
+            // Tooltips
+            ToolTip toolTip1 = new ToolTip();
 			toolTip1.ShowAlways = true;
 			toolTip1.SetToolTip(txtABitrate, "Vorbis: 48-500, Opus: 8-256"); 
 		}
@@ -76,34 +81,35 @@ namespace recode.net
 		
 		void Button1Click(object sender, EventArgs e)
 		{
-			string sCmd = "";
-			
 			if (isEncoding) {
 				return;
 			}
-			
-			// Find a file to encode
-			iEncoding = 0; // todo		
-			
-			string sFile = lstFiles.Rows[iEncoding].Cells[2].Value.ToString();
-			
-			// Config process
-			startInfo.CreateNoWindow = false;
-			startInfo.WindowStyle = ProcessWindowStyle.Minimized;
-			startInfo.UseShellExecute = false;
-			if (Environment.Is64BitOperatingSystem) {
+
+
+            // Find a file to encode
+            int iEncoding = 0; // todo		
+            string sFile = lstFiles.Rows[iEncoding].Cells[2].Value.ToString();
+
+            // Get file information
+            /* todo */
+
+            // Config process
+            startInfo.CreateNoWindow = true;
+            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            startInfo.UseShellExecute = false;
+            startInfo.RedirectStandardOutput = true;
+            startInfo.RedirectStandardError = true;
+            if (Environment.Is64BitOperatingSystem) {
 				startInfo.FileName = "bin64/ffmpeg.exe";
 			}
 			else {
 				startInfo.FileName = "bin32/ffmpeg.exe";
-			}			
-			startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-			
-			// CmdLine (base)
-			sCmd = "-i \"" + sFile + "\" -b:v " + txtVBitrate.Text + "K" +
+			}
+
+            // CmdLine (base)
+            string sCmd = "-i \"" + sFile + "\" -b:v " + txtVBitrate.Text + "K" +
 				" -b:a " + txtABitrate.Text + "K" +
-				" -qmin 4 -rc_lookahead 0 -g 8 -" + 
-				" -threads " + Environment.ProcessorCount.ToString();
+				" -qmin 4 -g 8 -threads 4";
 			
 			// Codecs
 			switch (cboPreset.SelectedIndex) {
@@ -130,38 +136,50 @@ namespace recode.net
 			
 			// Output
 			sCmd += " -y \"" + sFile + ".webm\"";
-			
-			// *** Start
-			startInfo.Arguments = sCmd;					
-	    	exeProcess.EnableRaisingEvents = true;
-    		exeProcess.Exited += new EventHandler(myProcess_Exited);
-    		exeProcess.StartInfo = startInfo;
-			isEncoding = true;
-    		exeProcess.Start();
-    		exeProcess.PriorityClass = ProcessPriorityClass.Idle;
 
-			setStatus("encoding...");
-			lstFiles.Rows[iEncoding].Cells[0].Value = "encoding";
-		}
-	
-		private void myProcess_Exited(object sender, System.EventArgs e)
+            // GUI
+            isEncoding = true;
+            setStatus("encoding...");
+            lstFiles.Rows[iEncoding].Cells[0].Value = "encoding";
+
+            // *** Start
+            listBox1.Items.Add(sCmd);
+            Clipboard.SetText(sCmd);
+            startInfo.Arguments = sCmd;					
+    		exeProcess.StartInfo = startInfo;
+            exeProcess.Start();
+            exeProcess.PriorityClass = ProcessPriorityClass.Idle;
+            exeProcess.BeginOutputReadLine();
+            exeProcess.BeginErrorReadLine();
+        }
+
+        private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
+        {
+            string log = outLine.Data;
+            if (log == null)
+            {
+                return;
+            }
+
+            this.Invoke((MethodInvoker)delegate {
+                listBox1.Items.Add(outLine.Data); // runs on UI thread
+            });            
+        }
+
+        private void myProcess_Exited(object sender, System.EventArgs e)
 	    {
 	        isEncoding = false;
-	        
-	        switch (exeProcess.ExitCode) {
-	        	case 0: // success
-	        		setStatus("success!");	     
-	        		lstFiles.Rows[iEncoding].Cells[0].Value = "done";
-	        		break;
-	        	case 1: // error 
-	        		setStatus("error!");	        		
-	        		lstFiles.Rows[iEncoding].Cells[0].Value = "error";
-	        		break;	        
-	        }
-	        
-	        
-	        //Console.WriteLine("Exit time:    {0}\r\n" + "Exit code:    {1}\r\nElapsed time: {2}", exeProcess.ExitTime, exeProcess.ExitCode, exeProcess);
-	        
+            switch (exeProcess.ExitCode)
+            {
+                case 0: // success
+                    setStatus("success!");
+                    lstFiles.Rows[iEncoding].Cells[0].Value = "done";
+                    break;
+                default: // error 
+                    setStatus("error!");
+                    lstFiles.Rows[iEncoding].Cells[0].Value = "error";
+                    break;
+            }	        
 	    }
 		
 		void setStatus(string msg) {

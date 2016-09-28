@@ -5,3 +5,12 @@ C:\Users\sirber\Documents\GitHub\recode.net\obj\Debug\recode.net.MainForm.resour
 C:\Users\sirber\Documents\GitHub\recode.net\obj\Debug\recode.net.csproj.GenerateResource.Cache
 C:\Users\sirber\Documents\GitHub\recode.net\obj\Debug\recode.net.exe
 C:\Users\sirber\Documents\GitHub\recode.net\obj\Debug\recode.net.pdb
+D:\repos\recode.net\bin\Debug\recode.net.exe
+D:\repos\recode.net\bin\Debug\recode.net.pdb
+D:\repos\recode.net\obj\Debug\recode.net.csprojResolveAssemblyReference.cache
+D:\repos\recode.net\obj\Debug\recode.net.MainForm.resources
+D:\repos\recode.net\obj\Debug\recode.net.csproj.GenerateResource.Cache
+D:\repos\recode.net\obj\Debug\recode.net.exe
+D:\repos\recode.net\obj\Debug\recode.net.pdb
+D:\Repos\recode.net\bin\Debug\recode.net.exe.config
+D:\Repos\recode.net\obj\Debug\recode.net.Properties.Resources.resources
