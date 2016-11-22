@@ -21,7 +21,7 @@ namespace recode.net
 	/// </summary>
 	public partial class MainForm : Form
 	{
-		private string version = "2016-08-17 dev";
+		private string version = "2016-11-21 dev";
 		private bool isEncoding = false;
 		private int iEncoding = 0;
 		private ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -62,8 +62,6 @@ namespace recode.net
 
             // Process events
             exeProcess.Exited += new EventHandler(myProcess_Exited);
-            exeProcess.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
-            exeProcess.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
 
             // Tooltips
             ToolTip toolTip1 = new ToolTip();
@@ -99,26 +97,27 @@ namespace recode.net
             startInfo.UseShellExecute = false;
             startInfo.RedirectStandardOutput = true;
             startInfo.RedirectStandardError = true;
-            if (Environment.Is64BitOperatingSystem) {
-				startInfo.FileName = "bin64/ffmpeg.exe";
-			}
-			else {
-				startInfo.FileName = "bin32/ffmpeg.exe";
-			}
-
+            startInfo.FileName = "ffmpeg.exe";
+			
             // CmdLine (base)
             string sCmd = "-i \"" + sFile + "\" -b:v " + txtVBitrate.Text + "K" +
 				" -b:a " + txtABitrate.Text + "K" +
-				" -qmin 4 -g 8 -threads 4";
+				" -qmin 4 -g 8 "; // -threads 4
 			
 			// Codecs
 			switch (cboPreset.SelectedIndex) {
 				case 0: // vp8/vorbis
-					sCmd += " -c:v libvpx -c:a libvorbis";
+					sCmd += " -c:v libvpx -c:a libvorbis -ac 2";
 					break;
 				case 1: // vp9/opus
-					sCmd += " -c:v libvpx-vp9 -c:a libopus";
-					break;					
+					sCmd += " -c:v libvpx-vp9 -c:a libopus -ac 2";
+					break;		
+				case 2: // h264/he-aac
+					sCmd += " -c:v libvpx-vp9 -c:a libfdk_aac -profile:a aac_he_v2 -ac 2";
+					break;
+				case 3: // h265/he-aac v2
+					sCmd += " -c:v libvpx-vp9 -c:a libfdk_aac -profile:a aac_he_v2 -ac 2";
+					break;	
 			}
 			
 			// Quality
@@ -143,7 +142,6 @@ namespace recode.net
             lstFiles.Rows[iEncoding].Cells[0].Value = "encoding";
 
             // *** Start
-            listBox1.Items.Add(sCmd);
             Clipboard.SetText(sCmd);
             startInfo.Arguments = sCmd;					
     		exeProcess.StartInfo = startInfo;
@@ -151,19 +149,6 @@ namespace recode.net
             exeProcess.PriorityClass = ProcessPriorityClass.Idle;
             exeProcess.BeginOutputReadLine();
             exeProcess.BeginErrorReadLine();
-        }
-
-        private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
-        {
-            string log = outLine.Data;
-            if (log == null)
-            {
-                return;
-            }
-
-            this.Invoke((MethodInvoker)delegate {
-                listBox1.Items.Add(outLine.Data); // runs on UI thread
-            });            
         }
 
         private void myProcess_Exited(object sender, System.EventArgs e)
