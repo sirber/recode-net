@@ -103,7 +103,7 @@ namespace recode.net
 			this.cboPreset.Name = "cboPreset";
 			this.cboPreset.Size = new System.Drawing.Size(212, 21);
 			this.cboPreset.TabIndex = 1;
-			this.cboPreset.SelectedIndexChanged += new System.EventHandler(this.CboPresetSelectedIndexChanged);
+			//this.cboPreset.SelectedIndexChanged += new System.EventHandler(this.CboPresetSelectedIndexChanged);
 			// 
 			// button1
 			// 

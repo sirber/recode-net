@@ -1,13 +1,15 @@
-﻿<Properties StartupItem="recode.net.csproj">
+﻿<Properties StartupConfiguration="{0E5FE0E5-F240-480B-950F-3856CE625A92}|Default">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.ItemProperties.recode.net PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.Workbench ActiveDocument="MainForm.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MainForm.Designer.cs">
     <Files>
       <File FileName="MainForm.cs" Line="22" Column="2" />
+      <File FileName="MainForm.Designer.cs" Line="17" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
+  <MultiItemStartupConfigurations />
 </Properties>
