@@ -115,7 +115,8 @@ namespace recode.net
             startInfo.FileName = "ffmpeg.exe";
 			
             // CmdLine (base)
-            string sCmd = "-hwaccel cuvid -i \"" + sFile + "\" -b:v " + txtVBitrate.Text + "K" +
+            string sCmd = "-hwaccel cuvid -c:v h264_cuvid" + 
+            	" -i \"" + sFile + "\" -b:v " + txtVBitrate.Text + "K" +
 				" -b:a " + txtABitrate.Text + "K" +            	
 				" -qmin 4 -g 8 "; // -threads 4
 			
