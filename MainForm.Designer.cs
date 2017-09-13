@@ -45,13 +45,12 @@ namespace recode.net
 			this.button1 = new System.Windows.Forms.Button();
 			this.cboATrack = new System.Windows.Forms.ComboBox();
 			this.cboSTrack = new System.Windows.Forms.ComboBox();
-			this.button2 = new System.Windows.Forms.Button();
 			this.cboVPreset = new System.Windows.Forms.ComboBox();
 			this.txtVBitrate = new System.Windows.Forms.TextBox();
 			this.txtABitrate = new System.Windows.Forms.TextBox();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-			this.chkHW = new System.Windows.Forms.CheckBox();
+			this.cboHW = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.lstFiles)).BeginInit();
 			this.statusStrip1.SuspendLayout();
 			this.SuspendLayout();
@@ -104,11 +103,11 @@ namespace recode.net
 			// 
 			// button1
 			// 
-			this.button1.Location = new System.Drawing.Point(618, 247);
+			this.button1.Location = new System.Drawing.Point(699, 248);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(75, 47);
 			this.button1.TabIndex = 2;
-			this.button1.Text = "Start";
+			this.button1.Text = "Start / Stop";
 			this.button1.UseVisualStyleBackColor = true;
 			this.button1.Click += new System.EventHandler(this.Button1Click);
 			// 
@@ -140,17 +139,6 @@ namespace recode.net
 			this.cboSTrack.Name = "cboSTrack";
 			this.cboSTrack.Size = new System.Drawing.Size(121, 21);
 			this.cboSTrack.TabIndex = 4;
-			// 
-			// button2
-			// 
-			this.button2.Enabled = false;
-			this.button2.Location = new System.Drawing.Point(699, 247);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(48, 47);
-			this.button2.TabIndex = 5;
-			this.button2.Text = "Stop";
-			this.button2.UseVisualStyleBackColor = true;
-			this.button2.Click += new System.EventHandler(this.Button2Click);
 			// 
 			// cboVPreset
 			// 
@@ -198,26 +186,29 @@ namespace recode.net
 			this.toolStripStatusLabel1.Size = new System.Drawing.Size(38, 17);
 			this.toolStripStatusLabel1.Text = "status";
 			// 
-			// chkHW
+			// cboHW
 			// 
-			this.chkHW.Location = new System.Drawing.Point(12, 272);
-			this.chkHW.Name = "chkHW";
-			this.chkHW.Size = new System.Drawing.Size(212, 24);
-			this.chkHW.TabIndex = 11;
-			this.chkHW.Text = "Use hardware acceleration (nvidia)";
-			this.chkHW.UseVisualStyleBackColor = true;
+			this.cboHW.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cboHW.FormattingEnabled = true;
+			this.cboHW.Items.AddRange(new object[] {
+			"Software Only",
+			"Hardware Decode",
+			"Full Hardware Transcode"});
+			this.cboHW.Location = new System.Drawing.Point(12, 274);
+			this.cboHW.Name = "cboHW";
+			this.cboHW.Size = new System.Drawing.Size(212, 21);
+			this.cboHW.TabIndex = 11;
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(786, 328);
-			this.Controls.Add(this.chkHW);
+			this.Controls.Add(this.cboHW);
 			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.txtABitrate);
 			this.Controls.Add(this.txtVBitrate);
 			this.Controls.Add(this.cboVPreset);
-			this.Controls.Add(this.button2);
 			this.Controls.Add(this.cboSTrack);
 			this.Controls.Add(this.cboATrack);
 			this.Controls.Add(this.button1);
@@ -241,7 +232,6 @@ namespace recode.net
 		private System.Windows.Forms.TextBox txtABitrate;
 		private System.Windows.Forms.TextBox txtVBitrate;
 		private System.Windows.Forms.ComboBox cboVPreset;
-		private System.Windows.Forms.Button button2;
 		private System.Windows.Forms.ComboBox cboSTrack;
 		private System.Windows.Forms.ComboBox cboATrack;
 		private System.Windows.Forms.Button button1;
@@ -250,6 +240,6 @@ namespace recode.net
 		private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
 		private System.Windows.Forms.DataGridView lstFiles;
-		private System.Windows.Forms.CheckBox chkHW;
+		private System.Windows.Forms.ComboBox cboHW;
     }
 }

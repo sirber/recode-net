@@ -59,6 +59,7 @@ namespace recode.net
 			cboVPreset.SelectedIndex = 0;
 			cboATrack.SelectedIndex = 0;
 			cboSTrack.SelectedIndex = 0;
+			cboHW.SelectedIndex = 0;
 
             // Process events
             exeProcess.Exited += new EventHandler(myProcess_Exited);
@@ -81,25 +82,22 @@ namespace recode.net
 		void Button1Click(object sender, EventArgs e)
 		{
 			if (isEncoding) {
-				return;
+				isEncoding = false;
+				setStatus("canceled.");
+				lstFiles.Rows[iEncoding].Cells[0].Value = "idle";
+				exeProcess.Kill();	
 			}
 
-			button1.Enabled = false;
-			button2.Enabled = true;
-
             // Find a file to encode
-            iEncoding = 0; // todo		
             string sFile = "";
             for (int icpt = 0; icpt < lstFiles.Rows.Count; icpt ++) {
             	if (lstFiles.Rows[icpt].Cells[0].Value.ToString() == "ready") {
-            		sFile = lstFiles.Rows[iEncoding].Cells[2].Value.ToString();	
+            		sFile = lstFiles.Rows[icpt].Cells[2].Value.ToString();	
             		break;
             	}            	
             }
             if (String.IsNullOrEmpty(sFile)) {
             	setStatus("Nothing to encode...?");
-            	button1.Enabled = true;
-				button2.Enabled = false;
             	return;
             }
 
@@ -115,8 +113,11 @@ namespace recode.net
             startInfo.FileName = "ffmpeg.exe";
 			
             // CmdLine (base)
-            string sCmd = "-hwaccel cuvid -c:v h264_cuvid" + 
-            	" -i \"" + sFile + "\" -b:v " + txtVBitrate.Text + "K" +
+            string sCmd = "";
+            if (cboHW.SelectedIndex > 0) {
+            	sCmd += "-hwaccel cuvid -c:v h264_cuvid";
+            }
+            sCmd += " -i \"" + sFile + "\" -b:v " + txtVBitrate.Text + "K" +
 				" -b:a " + txtABitrate.Text + "K" +            	
 				" -qmin 4 -g 8 "; // -threads 4
 			
@@ -124,14 +125,14 @@ namespace recode.net
 			string sCodec = "libx264";
 			switch (cboPreset.SelectedIndex) {
 				case 0: // h264/he-aac
-					if (chkHW.Checked) {
+					if (cboHW.SelectedIndex == 2) {
 						sCodec = "h264_nvenc";
 					}
 					sCmd += " -c:v " + sCodec + " -c:a libfdk_aac -profile:v main -level 4.0 -profile:a aac_he_v2 -ac 2";
 					break;
 				case 1: // h265/he-aac
 					sCodec = "libx265";
-					if (chkHW.Checked) {
+					if (cboHW.SelectedIndex == 2) {
 						sCodec = "hevc_nvenc";
 					}
 					sCmd += " -c:v " + sCodec + " -c:a libfdk_aac -profile:v main -level 4.0 -profile:a aac_he_v2 -ac 2";
@@ -176,8 +177,6 @@ namespace recode.net
             catch (Exception ex)
 	        {
 	            setStatus("Error: " + ex.Message);
-	            button1.Enabled = true;
-				button2.Enabled = false;
 	            return;
 	        }            
         }
@@ -196,31 +195,19 @@ namespace recode.net
                 case 0: // success
                     setStatus("success!");
                     lstFiles.Rows[iEncoding].Cells[0].Value = "done";
+                    
+                    // next!
+                    Button1Click(sender, e);
                     break;
                 default: // error 
                     setStatus("error!");
                     lstFiles.Rows[iEncoding].Cells[0].Value = "error";
                     break;
             }	        
-            
-            button1.Enabled = true;
-			button2.Enabled = false;
 	    }
 		
 		void setStatus(string msg) {
 			toolStripStatusLabel1.Text = msg;	
-		}
-		
-		void Button2Click(object sender, EventArgs e)
-		{
-			if (isEncoding) {
-				setStatus("canceled.");
-				lstFiles.Rows[iEncoding].Cells[0].Value = "idle";
-				exeProcess.Kill();	
-			}			
-			
-			button1.Enabled = true;
-			button2.Enabled = false;
 		}
 	}
 }
