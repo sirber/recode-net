@@ -45,7 +45,7 @@ namespace recode.net
 			string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 			foreach (string file in files) {
 				DataGridViewRow row = (DataGridViewRow) lstFiles.RowTemplate.Clone();
-				row.CreateCells(lstFiles, "idle", Path.GetFileName(file), file);
+				row.CreateCells(lstFiles, "ready", Path.GetFileName(file), file);
 				lstFiles.Rows.Add(row);
 			}
 		}
@@ -91,7 +91,7 @@ namespace recode.net
             iEncoding = 0; // todo		
             string sFile = "";
             for (int icpt = 0; icpt < lstFiles.Rows.Count; icpt ++) {
-            	if (lstFiles.Rows[icpt].Cells[1].Value.ToString() == "ready") {
+            	if (lstFiles.Rows[icpt].Cells[0].Value.ToString() == "ready") {
             		sFile = lstFiles.Rows[iEncoding].Cells[2].Value.ToString();	
             		break;
             	}            	
