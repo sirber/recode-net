@@ -143,6 +143,7 @@ namespace recode.net
 			// 
 			// button2
 			// 
+			this.button2.Enabled = false;
 			this.button2.Location = new System.Drawing.Point(699, 247);
 			this.button2.Name = "button2";
 			this.button2.Size = new System.Drawing.Size(48, 47);
@@ -203,7 +204,7 @@ namespace recode.net
 			this.chkHW.Name = "chkHW";
 			this.chkHW.Size = new System.Drawing.Size(212, 24);
 			this.chkHW.TabIndex = 11;
-			this.chkHW.Text = "Use hardware acceleration";
+			this.chkHW.Text = "Use hardware acceleration (nvidia)";
 			this.chkHW.UseVisualStyleBackColor = true;
 			// 
 			// MainForm

@@ -66,7 +66,8 @@ namespace recode.net
             // Tooltips
             ToolTip toolTip1 = new ToolTip();
 			toolTip1.ShowAlways = true;
-			toolTip1.SetToolTip(txtABitrate, "Vorbis: 48-500, Opus: 8-256"); 
+			toolTip1.SetToolTip(txtABitrate, "64-320kbps");
+			toolTip1.SetToolTip(txtVBitrate, "SD: 368kbps+, HD: 612kbps+");
 		}
 		
 		private void saveConfig() {
@@ -83,10 +84,24 @@ namespace recode.net
 				return;
 			}
 
+			button1.Enabled = false;
+			button2.Enabled = true;
 
             // Find a file to encode
             iEncoding = 0; // todo		
-            string sFile = lstFiles.Rows[iEncoding].Cells[2].Value.ToString();
+            string sFile = "";
+            for (int icpt = 0; icpt < lstFiles.Rows.Count; icpt ++) {
+            	if (lstFiles.Rows[icpt].Cells[1].Value.ToString() == "ready") {
+            		sFile = lstFiles.Rows[iEncoding].Cells[2].Value.ToString();	
+            		break;
+            	}            	
+            }
+            if (String.IsNullOrEmpty(sFile)) {
+            	setStatus("Nothing to encode...?");
+            	button1.Enabled = true;
+				button2.Enabled = false;
+            	return;
+            }
 
             // Get file information
             /* todo */
@@ -160,6 +175,8 @@ namespace recode.net
             catch (Exception ex)
 	        {
 	            setStatus("Error: " + ex.Message);
+	            button1.Enabled = true;
+				button2.Enabled = false;
 	            return;
 	        }            
         }
@@ -184,6 +201,9 @@ namespace recode.net
                     lstFiles.Rows[iEncoding].Cells[0].Value = "error";
                     break;
             }	        
+            
+            button1.Enabled = true;
+			button2.Enabled = false;
 	    }
 		
 		void setStatus(string msg) {
@@ -197,6 +217,9 @@ namespace recode.net
 				lstFiles.Rows[iEncoding].Cells[0].Value = "idle";
 				exeProcess.Kill();	
 			}			
+			
+			button1.Enabled = true;
+			button2.Enabled = false;
 		}
 	}
 }
