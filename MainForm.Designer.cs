@@ -48,10 +48,10 @@ namespace recode.net
 			this.button2 = new System.Windows.Forms.Button();
 			this.cboVPreset = new System.Windows.Forms.ComboBox();
 			this.txtVBitrate = new System.Windows.Forms.TextBox();
-			this.label1 = new System.Windows.Forms.Label();
 			this.txtABitrate = new System.Windows.Forms.TextBox();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+			this.chkHW = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.lstFiles)).BeginInit();
 			this.statusStrip1.SuspendLayout();
 			this.SuspendLayout();
@@ -95,15 +95,12 @@ namespace recode.net
 			this.cboPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboPreset.FormattingEnabled = true;
 			this.cboPreset.Items.AddRange(new object[] {
-			"webm: vp8/vorbis",
-			"webm: vp9/opus",
-			"mkv: h264/he-aac v2",
-			"mkv: h265/he-aac v2"});
+			"mkv: h264/he-aac",
+			"mkv: h265/he-aac"});
 			this.cboPreset.Location = new System.Drawing.Point(12, 247);
 			this.cboPreset.Name = "cboPreset";
 			this.cboPreset.Size = new System.Drawing.Size(212, 21);
 			this.cboPreset.TabIndex = 1;
-			//this.cboPreset.SelectedIndexChanged += new System.EventHandler(this.CboPresetSelectedIndexChanged);
 			// 
 			// button1
 			// 
@@ -175,14 +172,6 @@ namespace recode.net
 			this.txtVBitrate.TabIndex = 7;
 			this.txtVBitrate.Text = "368";
 			// 
-			// label1
-			// 
-			this.label1.Location = new System.Drawing.Point(12, 277);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(152, 23);
-			this.label1.TabIndex = 8;
-			this.label1.Text = "Bitrate (video / audio, kbps):";
-			// 
 			// txtABitrate
 			// 
 			this.txtABitrate.Location = new System.Drawing.Point(364, 274);
@@ -208,14 +197,23 @@ namespace recode.net
 			this.toolStripStatusLabel1.Size = new System.Drawing.Size(38, 17);
 			this.toolStripStatusLabel1.Text = "status";
 			// 
+			// chkHW
+			// 
+			this.chkHW.Location = new System.Drawing.Point(12, 272);
+			this.chkHW.Name = "chkHW";
+			this.chkHW.Size = new System.Drawing.Size(212, 24);
+			this.chkHW.TabIndex = 11;
+			this.chkHW.Text = "Use hardware acceleration";
+			this.chkHW.UseVisualStyleBackColor = true;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(786, 328);
+			this.Controls.Add(this.chkHW);
 			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.txtABitrate);
-			this.Controls.Add(this.label1);
 			this.Controls.Add(this.txtVBitrate);
 			this.Controls.Add(this.cboVPreset);
 			this.Controls.Add(this.button2);
@@ -240,7 +238,6 @@ namespace recode.net
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
 		private System.Windows.Forms.StatusStrip statusStrip1;
 		private System.Windows.Forms.TextBox txtABitrate;
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.TextBox txtVBitrate;
 		private System.Windows.Forms.ComboBox cboVPreset;
 		private System.Windows.Forms.Button button2;
@@ -252,5 +249,6 @@ namespace recode.net
 		private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
 		private System.Windows.Forms.DataGridView lstFiles;
+		private System.Windows.Forms.CheckBox chkHW;
     }
 }

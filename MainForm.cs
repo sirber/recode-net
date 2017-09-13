@@ -85,7 +85,7 @@ namespace recode.net
 
 
             // Find a file to encode
-            int iEncoding = 0; // todo		
+            iEncoding = 0; // todo		
             string sFile = lstFiles.Rows[iEncoding].Cells[2].Value.ToString();
 
             // Get file information
@@ -100,41 +100,43 @@ namespace recode.net
             startInfo.FileName = "ffmpeg.exe";
 			
             // CmdLine (base)
-            string sCmd = "-i \"" + sFile + "\" -b:v " + txtVBitrate.Text + "K" +
-				" -b:a " + txtABitrate.Text + "K" +
+            string sCmd = "-hwaccel cuvid -i \"" + sFile + "\" -b:v " + txtVBitrate.Text + "K" +
+				" -b:a " + txtABitrate.Text + "K" +            	
 				" -qmin 4 -g 8 "; // -threads 4
 			
 			// Codecs
+			string sCodec = "libx264";
 			switch (cboPreset.SelectedIndex) {
-				case 0: // vp8/vorbis
-					sCmd += " -c:v libvpx -c:a libvorbis -ac 2";
+				case 0: // h264/he-aac
+					if (chkHW.Checked) {
+						sCodec = "h264_nvenc";
+					}
+					sCmd += " -c:v " + sCodec + " -c:a libfdk_aac -profile:v main -level 4.0 -profile:a aac_he_v2 -ac 2";
 					break;
-				case 1: // vp9/opus
-					sCmd += " -c:v libvpx-vp9 -c:a libopus -ac 2";
-					break;		
-				case 2: // h264/he-aac
-					sCmd += " -c:v libvpx-vp9 -c:a libfdk_aac -profile:a aac_he_v2 -ac 2";
-					break;
-				case 3: // h265/he-aac v2
-					sCmd += " -c:v libvpx-vp9 -c:a libfdk_aac -profile:a aac_he_v2 -ac 2";
+				case 1: // h265/he-aac
+					sCodec = "libx265";
+					if (chkHW.Checked) {
+						sCodec = "hevc_nvenc";
+					}
+					sCmd += " -c:v " + sCodec + " -c:a libfdk_aac -profile:v main -level 4.0 -profile:a aac_he_v2 -ac 2";
 					break;	
 			}
 			
 			// Quality
 			switch (cboVPreset.SelectedIndex) {
-				case 0:
-					sCmd += " -quality best";		
+				case 0: // best
+					sCmd += " -preset slow";		
 					break;
-				case 1:
-					sCmd += " -quality good";		
+				case 1: // good
+					sCmd += " -preset medium";		
 					break;
-				case 2:
-					sCmd += " -quality realtime";		
+				case 2: // fast
+					sCmd += " -preset fast";		
 					break;					
 			}
 			
 			// Output
-			sCmd += " -y \"" + sFile + ".webm\"";
+			sCmd += " -y \"" + sFile + ".out.mkv\"";
 
             // GUI
             isEncoding = true;
@@ -143,13 +145,30 @@ namespace recode.net
 
             // *** Start
             Clipboard.SetText(sCmd);
-            startInfo.Arguments = sCmd;					
-    		exeProcess.StartInfo = startInfo;
-            exeProcess.Start();
-            exeProcess.PriorityClass = ProcessPriorityClass.Idle;
-            exeProcess.BeginOutputReadLine();
-            exeProcess.BeginErrorReadLine();
+            try {
+	            startInfo.Arguments = sCmd;					
+	    		exeProcess.StartInfo = startInfo;
+	    		exeProcess.EnableRaisingEvents = true;
+	            exeProcess.Exited += new EventHandler(myProcess_Exited);   
+				exeProcess.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
+    			exeProcess.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);	            
+	            exeProcess.Start();   
+				exeProcess.PriorityClass = ProcessPriorityClass.Idle;	            
+	            exeProcess.BeginOutputReadLine();
+	            exeProcess.BeginErrorReadLine();	
+            }
+            catch (Exception ex)
+	        {
+	            setStatus("Error: " + ex.Message);
+	            return;
+	        }            
         }
+		
+		private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine) {
+			if (!String.IsNullOrEmpty(outLine.Data)) {
+				setStatus(outLine.Data);	
+			}		    
+		}
 
         private void myProcess_Exited(object sender, System.EventArgs e)
 	    {
