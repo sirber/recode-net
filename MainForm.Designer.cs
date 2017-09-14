@@ -36,11 +36,15 @@ namespace recode.net
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.lstFiles = new System.Windows.Forms.DataGridView();
 			this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.cleanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.cboPreset = new System.Windows.Forms.ComboBox();
 			this.button1 = new System.Windows.Forms.Button();
 			this.cboATrack = new System.Windows.Forms.ComboBox();
@@ -51,7 +55,9 @@ namespace recode.net
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
 			this.cboHW = new System.Windows.Forms.ComboBox();
+			this.cboFResize = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.lstFiles)).BeginInit();
+			this.contextMenuStrip1.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -64,9 +70,11 @@ namespace recode.net
 			this.Column1,
 			this.Column2,
 			this.Column3});
+			this.lstFiles.ContextMenuStrip = this.contextMenuStrip1;
 			this.lstFiles.Location = new System.Drawing.Point(12, 12);
 			this.lstFiles.Name = "lstFiles";
 			this.lstFiles.ReadOnly = true;
+			this.lstFiles.RowHeadersVisible = false;
 			this.lstFiles.Size = new System.Drawing.Size(762, 229);
 			this.lstFiles.TabIndex = 0;
 			// 
@@ -88,6 +96,27 @@ namespace recode.net
 			this.Column3.Name = "Column3";
 			this.Column3.ReadOnly = true;
 			this.Column3.Width = 500;
+			// 
+			// contextMenuStrip1
+			// 
+			this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.resetToolStripMenuItem,
+			this.cleanToolStripMenuItem});
+			this.contextMenuStrip1.Name = "contextMenuStrip1";
+			this.contextMenuStrip1.Size = new System.Drawing.Size(105, 48);
+			// 
+			// resetToolStripMenuItem
+			// 
+			this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
+			this.resetToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+			this.resetToolStripMenuItem.Text = "Reset";
+			this.resetToolStripMenuItem.Click += new System.EventHandler(this.ResetToolStripMenuItemClick);
+			// 
+			// cleanToolStripMenuItem
+			// 
+			this.cleanToolStripMenuItem.Name = "cleanToolStripMenuItem";
+			this.cleanToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
+			this.cleanToolStripMenuItem.Text = "Clean";
 			// 
 			// cboPreset
 			// 
@@ -135,7 +164,7 @@ namespace recode.net
 			"subtitle track 2",
 			"subtitle track 3",
 			"subtitle track 4"});
-			this.cboSTrack.Location = new System.Drawing.Point(491, 247);
+			this.cboSTrack.Location = new System.Drawing.Point(364, 274);
 			this.cboSTrack.Name = "cboSTrack";
 			this.cboSTrack.Size = new System.Drawing.Size(121, 21);
 			this.cboSTrack.TabIndex = 4;
@@ -148,14 +177,14 @@ namespace recode.net
 			"best",
 			"good",
 			"realtime"});
-			this.cboVPreset.Location = new System.Drawing.Point(230, 247);
+			this.cboVPreset.Location = new System.Drawing.Point(230, 274);
 			this.cboVPreset.Name = "cboVPreset";
 			this.cboVPreset.Size = new System.Drawing.Size(128, 21);
 			this.cboVPreset.TabIndex = 6;
 			// 
 			// txtVBitrate
 			// 
-			this.txtVBitrate.Location = new System.Drawing.Point(230, 274);
+			this.txtVBitrate.Location = new System.Drawing.Point(230, 248);
 			this.txtVBitrate.Name = "txtVBitrate";
 			this.txtVBitrate.Size = new System.Drawing.Size(128, 20);
 			this.txtVBitrate.TabIndex = 7;
@@ -163,7 +192,7 @@ namespace recode.net
 			// 
 			// txtABitrate
 			// 
-			this.txtABitrate.Location = new System.Drawing.Point(364, 274);
+			this.txtABitrate.Location = new System.Drawing.Point(491, 247);
 			this.txtABitrate.Name = "txtABitrate";
 			this.txtABitrate.Size = new System.Drawing.Size(121, 20);
 			this.txtABitrate.TabIndex = 9;
@@ -192,18 +221,35 @@ namespace recode.net
 			this.cboHW.FormattingEnabled = true;
 			this.cboHW.Items.AddRange(new object[] {
 			"Software Only",
-			"Hardware Decode",
-			"Full Hardware Transcode"});
+			"Hardware Decode, Software encode",
+			"Software Decode, Hardware encode",
+			"Hardware Transcode"});
 			this.cboHW.Location = new System.Drawing.Point(12, 274);
 			this.cboHW.Name = "cboHW";
 			this.cboHW.Size = new System.Drawing.Size(212, 21);
 			this.cboHW.TabIndex = 11;
+			this.cboHW.SelectedIndexChanged += new System.EventHandler(this.CboHWSelectedIndexChanged);
+			// 
+			// cboFResize
+			// 
+			this.cboFResize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cboFResize.FormattingEnabled = true;
+			this.cboFResize.Items.AddRange(new object[] {
+			"no resize",
+			"720p",
+			"480p",
+			"240p"});
+			this.cboFResize.Location = new System.Drawing.Point(491, 274);
+			this.cboFResize.Name = "cboFResize";
+			this.cboFResize.Size = new System.Drawing.Size(121, 21);
+			this.cboFResize.TabIndex = 12;
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(786, 328);
+			this.Controls.Add(this.cboFResize);
 			this.Controls.Add(this.cboHW);
 			this.Controls.Add(this.statusStrip1);
 			this.Controls.Add(this.txtABitrate);
@@ -221,6 +267,7 @@ namespace recode.net
 			this.Text = "recode.net";
 			this.Load += new System.EventHandler(this.MainFormLoad);
 			((System.ComponentModel.ISupportInitialize)(this.lstFiles)).EndInit();
+			this.contextMenuStrip1.ResumeLayout(false);
 			this.statusStrip1.ResumeLayout(false);
 			this.statusStrip1.PerformLayout();
 			this.ResumeLayout(false);
@@ -241,5 +288,9 @@ namespace recode.net
 		private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
 		private System.Windows.Forms.DataGridView lstFiles;
 		private System.Windows.Forms.ComboBox cboHW;
+		private System.Windows.Forms.ComboBox cboFResize;
+		private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+		private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem cleanToolStripMenuItem;
     }
 }

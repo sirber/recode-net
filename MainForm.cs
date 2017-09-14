@@ -60,6 +60,7 @@ namespace recode.net
 			cboATrack.SelectedIndex = 0;
 			cboSTrack.SelectedIndex = 0;
 			cboHW.SelectedIndex = 0;
+			cboFResize.SelectedIndex = 0;
 
             // Process events
             exeProcess.Exited += new EventHandler(myProcess_Exited);
@@ -81,10 +82,15 @@ namespace recode.net
 		
 		void Button1Click(object sender, EventArgs e)
 		{
+			encode();
+        }
+		
+		private void encode() {
 			if (isEncoding) {
 				isEncoding = false;
 				setStatus("canceled.");
-				lstFiles.Rows[iEncoding].Cells[0].Value = "idle";
+				lstFiles.Rows[iEncoding].Cells[0].Value = "ready";
+				exeProcess.CloseMainWindow();	
 				exeProcess.Kill();	
 			}
 
@@ -92,7 +98,8 @@ namespace recode.net
             string sFile = "";
             for (int icpt = 0; icpt < lstFiles.Rows.Count; icpt ++) {
             	if (lstFiles.Rows[icpt].Cells[0].Value.ToString() == "ready") {
-            		sFile = lstFiles.Rows[icpt].Cells[2].Value.ToString();	
+            		iEncoding = icpt;
+            		sFile = lstFiles.Rows[iEncoding].Cells[2].Value.ToString();	
             		break;
             	}            	
             }
@@ -105,6 +112,7 @@ namespace recode.net
             /* todo */
 
             // Config process
+            exeProcess = new Process();
             startInfo.CreateNoWindow = true;
             startInfo.WindowStyle = ProcessWindowStyle.Hidden;
             startInfo.UseShellExecute = false;
@@ -114,25 +122,25 @@ namespace recode.net
 			
             // CmdLine (base)
             string sCmd = "";
-            if (cboHW.SelectedIndex > 0) {
+            if (cboHW.SelectedIndex == 1 || cboHW.SelectedIndex == 3) {
             	sCmd += "-hwaccel cuvid -c:v h264_cuvid";
             }
             sCmd += " -i \"" + sFile + "\" -b:v " + txtVBitrate.Text + "K" +
 				" -b:a " + txtABitrate.Text + "K" +            	
-				" -qmin 4 -g 8 "; // -threads 4
+				" -qmin 4 -g 8 ";
 			
 			// Codecs
 			string sCodec = "libx264";
 			switch (cboPreset.SelectedIndex) {
 				case 0: // h264/he-aac
-					if (cboHW.SelectedIndex == 2) {
+					if (cboHW.SelectedIndex == 3) {
 						sCodec = "h264_nvenc";
 					}
 					sCmd += " -c:v " + sCodec + " -c:a libfdk_aac -profile:v main -level 4.0 -profile:a aac_he_v2 -ac 2";
 					break;
 				case 1: // h265/he-aac
 					sCodec = "libx265";
-					if (cboHW.SelectedIndex == 2) {
+					if (cboHW.SelectedIndex == 3) {
 						sCodec = "hevc_nvenc";
 					}
 					sCmd += " -c:v " + sCodec + " -c:a libfdk_aac -profile:v main -level 4.0 -profile:a aac_he_v2 -ac 2";
@@ -152,8 +160,24 @@ namespace recode.net
 					break;					
 			}
 			
+			// Resize
+			switch (cboFResize.SelectedIndex) {
+				case 1: // 720
+					sCmd += " -vf scale=out_h:720";
+					break;
+				case 2: // 480
+					sCmd += " -vf scale=out_h:480";
+					break;
+				case 3: // 240
+					sCmd += " -vf scale=out_h:240";
+					break;				
+			}
+			
 			// Output
 			sCmd += " -y \"" + sFile + ".out.mkv\"";
+			
+			// Debug!
+			Clipboard.SetText(sCmd);
 
             // GUI
             isEncoding = true;
@@ -178,8 +202,8 @@ namespace recode.net
 	        {
 	            setStatus("Error: " + ex.Message);
 	            return;
-	        }            
-        }
+	        }   
+		}
 		
 		private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine) {
 			if (!String.IsNullOrEmpty(outLine.Data)) {
@@ -197,7 +221,7 @@ namespace recode.net
                     lstFiles.Rows[iEncoding].Cells[0].Value = "done";
                     
                     // next!
-                    Button1Click(sender, e);
+                    this.Invoke((MethodInvoker) delegate {encode();});
                     break;
                 default: // error 
                     setStatus("error!");
@@ -208,6 +232,23 @@ namespace recode.net
 		
 		void setStatus(string msg) {
 			toolStripStatusLabel1.Text = msg;	
+		}
+        
+		void ResetToolStripMenuItemClick(object sender, EventArgs e)
+		{
+			for (int icpt = 0; icpt < lstFiles.Rows.Count; icpt ++) {
+            	if (lstFiles.Rows[icpt].Cells[0].Value.ToString() == "error") {
+					lstFiles.Rows[icpt].Cells[0].Value = "ready";
+            	}            	
+            }
+		}
+		void CboHWSelectedIndexChanged(object sender, EventArgs e)
+		{
+			cboFResize.Enabled = true;
+			if (cboHW.SelectedIndex > 0) {
+				cboFResize.Enabled = false;
+				cboFResize.SelectedIndex = 0;
+			}
 		}
 	}
 }
