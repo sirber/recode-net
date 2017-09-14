@@ -174,9 +174,9 @@ namespace recode.net
 			this.cboVPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cboVPreset.FormattingEnabled = true;
 			this.cboVPreset.Items.AddRange(new object[] {
-			"best",
-			"good",
-			"realtime"});
+			"slow",
+			"medium",
+			"fast"});
 			this.cboVPreset.Location = new System.Drawing.Point(230, 274);
 			this.cboVPreset.Name = "cboVPreset";
 			this.cboVPreset.Size = new System.Drawing.Size(128, 21);
@@ -264,7 +264,7 @@ namespace recode.net
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.Name = "MainForm";
-			this.Text = "recode.net";
+			this.Text = "Recode.NET";
 			this.Load += new System.EventHandler(this.MainFormLoad);
 			((System.ComponentModel.ISupportInitialize)(this.lstFiles)).EndInit();
 			this.contextMenuStrip1.ResumeLayout(false);
