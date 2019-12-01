@@ -48,10 +48,10 @@ namespace recode.net
 			setStatus("Recode.NET v/" + version);
 			
 			// UI Defaults
-			cboPreset.SelectedIndex = 0;
+			cboVCodec.SelectedIndex = 0;
+            cboACodec.SelectedIndex = 0;
 			cboVPreset.SelectedIndex = 0;
 			cboATrack.SelectedIndex = 0;
-			cboSTrack.SelectedIndex = 0;
 			cboFResize.SelectedIndex = 0;
 
             // Process events
@@ -60,8 +60,7 @@ namespace recode.net
             // Tooltips
             ToolTip toolTip1 = new ToolTip();
 			toolTip1.ShowAlways = true;
-			toolTip1.SetToolTip(txtABitrate, "Opus: 16-320kbps");
-			toolTip1.SetToolTip(txtVBitrate, "SD: 368kbps+, HD: 612kbps+");
+			toolTip1.SetToolTip(txtABitrate, "Opus: 16-320kbps, Vorbis: 32-320kbps, AAC: 128-320kbps");
 		}
 		
 		private void saveConfig() {
@@ -113,13 +112,12 @@ namespace recode.net
             startInfo.FileName = "ffmpeg.exe";
 			
             // CmdLine (base)
-            string sCmd = "";
-            sCmd += " -i \"" + sFile + "\" -b:v " + txtVBitrate.Text + "K" +
-				" -b:a " + txtABitrate.Text + "K" +            	
-				" -qmin 4 -g 8 ";
-			
-			// Codecs
-			switch (cboPreset.SelectedIndex) {
+            string sCmd = "-hwaccel dxva2 -i \"" + sFile + "\"" +
+				" -b:a " + txtABitrate.Text + "K";
+
+            // Video
+            sCmd += " -map 0:v:0 -b:v " + txtVBitrate.Text + "K -qmin 4 -g 8";
+			switch (cboVCodec.SelectedIndex) {
 				case 0: // h264
 					sCmd += " -c:v libx264";
                     switch (cboVPreset.SelectedIndex)
@@ -158,20 +156,53 @@ namespace recode.net
                     break;
             }
 
-            sCmd += " -c:a libopus -ac 2";
-	
+            // Audio
+            sCmd += " -map 0:a:" + cboATrack.SelectedIndex + "?";
+            switch(cboACodec.SelectedIndex)
+            {
+                case 0: 
+                case 1:
+                    sCmd += " -c:a libopus";
+                    break;
+
+                case 2:
+                case 3:
+                    sCmd += " -c:a libvorbis";
+                    break;
+
+                case 4:
+                case 5:
+                    sCmd += " -c:a aac";
+                    break;
+            }
+
+            switch(cboACodec.SelectedIndex)
+            {
+                case 0:
+                case 2:
+                case 4:
+                    sCmd += " -ac 2";
+                    break;
+            }
+
 			// Resize
 			switch (cboFResize.SelectedIndex) {
-				case 1: // 720
+                case 1: // 1080
+                    sCmd += " -vf scale=out_h:1080";
+                    break;
+                case 2: // 720
 					sCmd += " -vf scale=out_h:720";
 					break;
-				case 2: // 480
+				case 3: // 480
 					sCmd += " -vf scale=out_h:480";
 					break;
-				case 3: // 240
+				case 4: // 240
 					sCmd += " -vf scale=out_h:240";
 					break;				
 			}
+
+            // Subtitles (all)
+            sCmd += " -map 0:s -c:s copy";
 			
 			// Output
 			sCmd += " -y \"" + sFile + ".out.mkv\"";
@@ -214,6 +245,11 @@ namespace recode.net
         
         private void myProcess_Exited(object sender, System.EventArgs e)
 	    {
+            if (isEncoding == false)
+            {
+                return;
+            }
+
 	        isEncoding = false;
             switch (exeProcess.ExitCode)
             {

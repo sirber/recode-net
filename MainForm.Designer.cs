@@ -45,16 +45,16 @@ namespace recode.net
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cboPreset = new System.Windows.Forms.ComboBox();
+            this.cboVCodec = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.cboATrack = new System.Windows.Forms.ComboBox();
-            this.cboSTrack = new System.Windows.Forms.ComboBox();
             this.cboVPreset = new System.Windows.Forms.ComboBox();
             this.txtVBitrate = new System.Windows.Forms.TextBox();
             this.txtABitrate = new System.Windows.Forms.TextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.cboFResize = new System.Windows.Forms.ComboBox();
+            this.cboACodec = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.lstFiles)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -117,19 +117,19 @@ namespace recode.net
             this.cleanToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
             this.cleanToolStripMenuItem.Text = "Clean";
             // 
-            // cboPreset
+            // cboVCodec
             // 
-            this.cboPreset.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboPreset.FormattingEnabled = true;
-            this.cboPreset.Items.AddRange(new object[] {
+            this.cboVCodec.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboVCodec.FormattingEnabled = true;
+            this.cboVCodec.Items.AddRange(new object[] {
             "H264",
             "H265",
             "VP8",
             "VP9"});
-            this.cboPreset.Location = new System.Drawing.Point(12, 247);
-            this.cboPreset.Name = "cboPreset";
-            this.cboPreset.Size = new System.Drawing.Size(212, 21);
-            this.cboPreset.TabIndex = 1;
+            this.cboVCodec.Location = new System.Drawing.Point(12, 247);
+            this.cboVCodec.Name = "cboVCodec";
+            this.cboVCodec.Size = new System.Drawing.Size(212, 21);
+            this.cboVCodec.TabIndex = 1;
             // 
             // button1
             // 
@@ -150,25 +150,10 @@ namespace recode.net
             "audio track 2",
             "audio track 3",
             "audio track 4"});
-            this.cboATrack.Location = new System.Drawing.Point(364, 247);
+            this.cboATrack.Location = new System.Drawing.Point(364, 274);
             this.cboATrack.Name = "cboATrack";
             this.cboATrack.Size = new System.Drawing.Size(121, 21);
             this.cboATrack.TabIndex = 3;
-            // 
-            // cboSTrack
-            // 
-            this.cboSTrack.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboSTrack.FormattingEnabled = true;
-            this.cboSTrack.Items.AddRange(new object[] {
-            "no subtitles",
-            "subtitle track 1",
-            "subtitle track 2",
-            "subtitle track 3",
-            "subtitle track 4"});
-            this.cboSTrack.Location = new System.Drawing.Point(364, 274);
-            this.cboSTrack.Name = "cboSTrack";
-            this.cboSTrack.Size = new System.Drawing.Size(121, 21);
-            this.cboSTrack.TabIndex = 4;
             // 
             // cboVPreset
             // 
@@ -178,9 +163,9 @@ namespace recode.net
             "slow",
             "medium",
             "fast"});
-            this.cboVPreset.Location = new System.Drawing.Point(230, 274);
+            this.cboVPreset.Location = new System.Drawing.Point(364, 248);
             this.cboVPreset.Name = "cboVPreset";
-            this.cboVPreset.Size = new System.Drawing.Size(128, 21);
+            this.cboVPreset.Size = new System.Drawing.Size(121, 21);
             this.cboVPreset.TabIndex = 6;
             // 
             // txtVBitrate
@@ -193,9 +178,9 @@ namespace recode.net
             // 
             // txtABitrate
             // 
-            this.txtABitrate.Location = new System.Drawing.Point(491, 247);
+            this.txtABitrate.Location = new System.Drawing.Point(230, 274);
             this.txtABitrate.Name = "txtABitrate";
-            this.txtABitrate.Size = new System.Drawing.Size(121, 20);
+            this.txtABitrate.Size = new System.Drawing.Size(128, 20);
             this.txtABitrate.TabIndex = 9;
             this.txtABitrate.Text = "64";
             // 
@@ -222,28 +207,45 @@ namespace recode.net
             this.cboFResize.FormattingEnabled = true;
             this.cboFResize.Items.AddRange(new object[] {
             "no resize",
+            "1080p",
             "720p",
             "480p",
             "240p"});
-            this.cboFResize.Location = new System.Drawing.Point(491, 274);
+            this.cboFResize.Location = new System.Drawing.Point(491, 247);
             this.cboFResize.Name = "cboFResize";
             this.cboFResize.Size = new System.Drawing.Size(121, 21);
             this.cboFResize.TabIndex = 12;
+            // 
+            // cboACodec
+            // 
+            this.cboACodec.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboACodec.FormattingEnabled = true;
+            this.cboACodec.Items.AddRange(new object[] {
+            "Opus (2.0)",
+            "Opus (5.1)",
+            "Vorbis (2.0)",
+            "Vorbis (5.1)",
+            "AAC (2.0)",
+            "AAC (5.1)"});
+            this.cboACodec.Location = new System.Drawing.Point(12, 274);
+            this.cboACodec.Name = "cboACodec";
+            this.cboACodec.Size = new System.Drawing.Size(212, 21);
+            this.cboACodec.TabIndex = 13;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(786, 328);
+            this.Controls.Add(this.cboACodec);
             this.Controls.Add(this.cboFResize);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.txtABitrate);
             this.Controls.Add(this.txtVBitrate);
             this.Controls.Add(this.cboVPreset);
-            this.Controls.Add(this.cboSTrack);
             this.Controls.Add(this.cboATrack);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.cboPreset);
+            this.Controls.Add(this.cboVCodec);
             this.Controls.Add(this.lstFiles);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -264,10 +266,9 @@ namespace recode.net
 		private System.Windows.Forms.TextBox txtABitrate;
 		private System.Windows.Forms.TextBox txtVBitrate;
 		private System.Windows.Forms.ComboBox cboVPreset;
-		private System.Windows.Forms.ComboBox cboSTrack;
 		private System.Windows.Forms.ComboBox cboATrack;
 		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.ComboBox cboPreset;
+		private System.Windows.Forms.ComboBox cboVCodec;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
@@ -276,5 +277,6 @@ namespace recode.net
 		private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem cleanToolStripMenuItem;
+        private System.Windows.Forms.ComboBox cboACodec;
     }
 }
