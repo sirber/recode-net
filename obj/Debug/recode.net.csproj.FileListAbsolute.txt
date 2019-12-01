@@ -1,0 +1,9 @@
+C:\Users\sirber\Documents\repos\recode.net\bin\Debug\recode.net.exe.config
+C:\Users\sirber\Documents\repos\recode.net\bin\Debug\recode.net.exe
+C:\Users\sirber\Documents\repos\recode.net\bin\Debug\recode.net.pdb
+C:\Users\sirber\Documents\repos\recode.net\obj\Debug\recode.net.csprojAssemblyReference.cache
+C:\Users\sirber\Documents\repos\recode.net\obj\Debug\recode.net.MainForm.resources
+C:\Users\sirber\Documents\repos\recode.net\obj\Debug\recode.net.Properties.Resources.resources
+C:\Users\sirber\Documents\repos\recode.net\obj\Debug\recode.net.csproj.GenerateResource.cache
+C:\Users\sirber\Documents\repos\recode.net\obj\Debug\recode.net.exe
+C:\Users\sirber\Documents\repos\recode.net\obj\Debug\recode.net.pdb

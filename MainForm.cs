@@ -1,17 +1,10 @@
-﻿/*
- * Created by SharpDevelop.
- * User: stber214
- * Date: 14/04/2015
- * Time: 11:24 AM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using BjSTools.MultiMedia;
 
 namespace recode.net
@@ -21,7 +14,7 @@ namespace recode.net
 	/// </summary>
 	public partial class MainForm : Form
 	{
-		private string version = "2016-11-21 dev";
+		private string version = "2019-11-18 dev";
 		private bool isEncoding = false;
 		private int iEncoding = 0;
 		private ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -68,7 +61,7 @@ namespace recode.net
             // Tooltips
             ToolTip toolTip1 = new ToolTip();
 			toolTip1.ShowAlways = true;
-			toolTip1.SetToolTip(txtABitrate, "64-320kbps");
+			toolTip1.SetToolTip(txtABitrate, "Opus: 16-320kbps");
 			toolTip1.SetToolTip(txtVBitrate, "SD: 368kbps+, HD: 612kbps+");
 		}
 		
@@ -118,12 +111,12 @@ namespace recode.net
             startInfo.UseShellExecute = false;
             startInfo.RedirectStandardOutput = true;
             startInfo.RedirectStandardError = true;
-            startInfo.FileName = "ffmpeg.exe";
+            startInfo.FileName = "ffmpeg/ffmpeg.exe";
 			
             // CmdLine (base)
             string sCmd = "";
             if (cboHW.SelectedIndex == 1 || cboHW.SelectedIndex == 3) {
-            	sCmd += "-hwaccel cuvid -c:v h264_cuvid";
+            	sCmd += "-hwaccel cuvid -c:v h264_cuvid"; // FIXME: add other encoers than nvidia
             }
             sCmd += " -i \"" + sFile + "\" -b:v " + txtVBitrate.Text + "K" +
 				" -b:a " + txtABitrate.Text + "K" +            	
@@ -136,19 +129,21 @@ namespace recode.net
 					if (cboHW.SelectedIndex == 3) {
 						sCodec = "h264_nvenc";
 					}
-					sCmd += " -c:v " + sCodec + " -c:a libfdk_aac -profile:v main -level 4.0 -profile:a aac_he_v2 -ac 2";
+					sCmd += " -c:v " + sCodec + " -profile:v high -level 4.1";
 					break;
 				case 1: // h265/he-aac
 					sCodec = "libx265";
 					if (cboHW.SelectedIndex == 3) {
 						sCodec = "hevc_nvenc";
 					}
-					sCmd += " -c:v " + sCodec + " -c:a libfdk_aac -profile:v main -level 4.0 -profile:a aac_he_v2 -ac 2";
+					sCmd += " -c:v " + sCodec;
 					break;	
 			}
-			
-			// Quality
-			switch (cboVPreset.SelectedIndex) {
+
+            sCmd += " -c:a libopus -ac 2";
+
+            // Quality
+            switch (cboVPreset.SelectedIndex) {
 				case 0: // best
 					sCmd += " -preset slow";		
 					break;
@@ -191,7 +186,7 @@ namespace recode.net
 	    		exeProcess.StartInfo = startInfo;
 	    		exeProcess.EnableRaisingEvents = true;
 	            exeProcess.Exited += new EventHandler(myProcess_Exited);   
-				exeProcess.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
+				exeProcess.OutputDataReceived += new DataReceivedEventHandler(OutputHandler); // fixme: thread sync issue
     			exeProcess.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);	            
 	            exeProcess.Start();   
 				exeProcess.PriorityClass = ProcessPriorityClass.Idle;	            
@@ -205,12 +200,14 @@ namespace recode.net
 	        }   
 		}
 		
-		private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine) {
+		private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine) 
+        {
 			if (!String.IsNullOrEmpty(outLine.Data)) {
-				setStatus(outLine.Data);	
+                Invoke(new SetStatusDelegate(setStatus), outLine.Data);
+                // setStatus(outLine.Data);	
 			}		    
 		}
-
+        
         private void myProcess_Exited(object sender, System.EventArgs e)
 	    {
 	        isEncoding = false;
@@ -233,8 +230,10 @@ namespace recode.net
 		void setStatus(string msg) {
 			toolStripStatusLabel1.Text = msg;	
 		}
-        
-		void ResetToolStripMenuItemClick(object sender, EventArgs e)
+
+        private delegate void SetStatusDelegate(string msg);
+
+        void ResetToolStripMenuItemClick(object sender, EventArgs e)
 		{
 			for (int icpt = 0; icpt < lstFiles.Rows.Count; icpt ++) {
             	if (lstFiles.Rows[icpt].Cells[0].Value.ToString() == "error") {
