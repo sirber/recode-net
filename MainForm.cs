@@ -18,8 +18,8 @@ namespace recode.net
 		private int iEncoding = 0;
 		private ProcessStartInfo startInfo = new ProcessStartInfo();
 		private Process exeProcess = new Process();
-		
-		public MainForm()
+
+        public MainForm()
 		{
 			InitializeComponent();
 			
@@ -53,22 +53,10 @@ namespace recode.net
 			cboATrack.SelectedIndex = 0;
 			cboFResize.SelectedIndex = 0;
 
-            loadConfig();
-
             // Tooltips
             ToolTip toolTip1 = new ToolTip();
 			toolTip1.ShowAlways = true;
 			toolTip1.SetToolTip(txtABitrate, "Opus: 32-320kbps, Vorbis: 64-320kbps, AAC: 128-320kbps");
-		}
-
-
-		
-		private void saveConfig() {
-			// TODO: save JSON
-		}
-		
-		private void loadConfig() {
-			// TODO: reload JSON
 		}
 		
 		void Button1Click(object sender, EventArgs e)
@@ -292,7 +280,6 @@ namespace recode.net
             {
                 exeProcess.Kill();
             }
-            saveConfig();
         }
 
         private void cboACodec_SelectedIndexChanged(object sender, EventArgs e)
@@ -305,6 +292,17 @@ namespace recode.net
                 case 3: txtABitrate.Text = "256"; break;
                 case 4: txtABitrate.Text = "128"; break;
                 case 5: txtABitrate.Text = "320"; break;
+            }
+        }
+
+        private void cboVCodec_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (cboVCodec.SelectedIndex)
+            {
+                case 0: txtVBitrate.Text = "4096"; break;
+                case 1: txtVBitrate.Text = "2048"; break;
+                case 2: txtVBitrate.Text = "4096"; break;
+                case 3: txtVBitrate.Text = "2048"; break;
             }
         }
     }

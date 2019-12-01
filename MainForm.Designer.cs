@@ -130,6 +130,7 @@ namespace recode.net
             this.cboVCodec.Name = "cboVCodec";
             this.cboVCodec.Size = new System.Drawing.Size(212, 21);
             this.cboVCodec.TabIndex = 1;
+            this.cboVCodec.SelectedIndexChanged += new System.EventHandler(this.cboVCodec_SelectedIndexChanged);
             // 
             // button1
             // 
