@@ -252,6 +252,7 @@ namespace recode.net
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "Recode.NET";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainFormLoad);
             ((System.ComponentModel.ISupportInitialize)(this.lstFiles)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);

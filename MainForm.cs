@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using BjSTools.MultiMedia;
 
 namespace recode.net
 {
@@ -14,7 +13,7 @@ namespace recode.net
 	/// </summary>
 	public partial class MainForm : Form
 	{
-		private string version = "2019-11-18 dev";
+		private string version = "2019-12-01 dev";
 		private bool isEncoding = false;
 		private int iEncoding = 0;
 		private ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -54,21 +53,28 @@ namespace recode.net
 			cboATrack.SelectedIndex = 0;
 			cboFResize.SelectedIndex = 0;
 
+            loadConfig();
+
             // Process events
+            exeProcess.EnableRaisingEvents = true;
             exeProcess.Exited += new EventHandler(myProcess_Exited);
+            exeProcess.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
+            exeProcess.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
 
             // Tooltips
             ToolTip toolTip1 = new ToolTip();
 			toolTip1.ShowAlways = true;
-			toolTip1.SetToolTip(txtABitrate, "Opus: 16-320kbps, Vorbis: 32-320kbps, AAC: 128-320kbps");
+			toolTip1.SetToolTip(txtABitrate, "Opus: 32-320kbps, Vorbis: 64-320kbps, AAC: 128-320kbps");
 		}
+
+
 		
 		private void saveConfig() {
-			// todo
+			// TODO: save JSON
 		}
 		
 		private void loadConfig() {
-			// todo
+			// TODO: reload JSON
 		}
 		
 		void Button1Click(object sender, EventArgs e)
@@ -112,8 +118,7 @@ namespace recode.net
             startInfo.FileName = "ffmpeg.exe";
 			
             // CmdLine (base)
-            string sCmd = "-hwaccel dxva2 -i \"" + sFile + "\"" +
-				" -b:a " + txtABitrate.Text + "K";
+            string sCmd = "-hwaccel dxva2 -i \"" + sFile + "\"";
 
             // Video
             sCmd += " -map 0:v:0 -b:v " + txtVBitrate.Text + "K -qmin 4 -g 8";
@@ -157,7 +162,7 @@ namespace recode.net
             }
 
             // Audio
-            sCmd += " -map 0:a:" + cboATrack.SelectedIndex + "?";
+            sCmd += " -map 0:a:" + cboATrack.SelectedIndex + "? -b:a " + txtABitrate.Text + "K";
             switch(cboACodec.SelectedIndex)
             {
                 case 0: 
@@ -218,11 +223,7 @@ namespace recode.net
             // *** Start
             try {
 	            startInfo.Arguments = sCmd;					
-	    		exeProcess.StartInfo = startInfo;
-	    		exeProcess.EnableRaisingEvents = true;
-	            exeProcess.Exited += new EventHandler(myProcess_Exited);   
-				exeProcess.OutputDataReceived += new DataReceivedEventHandler(OutputHandler); // fixme: thread sync issue
-    			exeProcess.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);	            
+	    		exeProcess.StartInfo = startInfo;            
 	            exeProcess.Start();   
 				exeProcess.PriorityClass = ProcessPriorityClass.Idle;	            
 	            exeProcess.BeginOutputReadLine();
@@ -285,5 +286,14 @@ namespace recode.net
 		{
 			cboFResize.Enabled = true;
 		}
-	}
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (isEncoding)
+            {
+                exeProcess.Kill();
+            }
+            saveConfig();
+        }
+    }
 }
