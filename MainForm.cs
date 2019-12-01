@@ -52,7 +52,6 @@ namespace recode.net
 			cboVPreset.SelectedIndex = 0;
 			cboATrack.SelectedIndex = 0;
 			cboSTrack.SelectedIndex = 0;
-			cboHW.SelectedIndex = 0;
 			cboFResize.SelectedIndex = 0;
 
             // Process events
@@ -83,8 +82,8 @@ namespace recode.net
 				isEncoding = false;
 				setStatus("canceled.");
 				lstFiles.Rows[iEncoding].Cells[0].Value = "ready";
-				exeProcess.CloseMainWindow();	
-				exeProcess.Kill();	
+				exeProcess.Kill();
+                return;
 			}
 
             // Find a file to encode
@@ -115,46 +114,52 @@ namespace recode.net
 			
             // CmdLine (base)
             string sCmd = "";
-            if (cboHW.SelectedIndex == 1 || cboHW.SelectedIndex == 3) {
-            	sCmd += "-hwaccel cuvid -c:v h264_cuvid"; // FIXME: add other encoers than nvidia
-            }
             sCmd += " -i \"" + sFile + "\" -b:v " + txtVBitrate.Text + "K" +
 				" -b:a " + txtABitrate.Text + "K" +            	
 				" -qmin 4 -g 8 ";
 			
 			// Codecs
-			string sCodec = "libx264";
 			switch (cboPreset.SelectedIndex) {
-				case 0: // h264/he-aac
-					if (cboHW.SelectedIndex == 3) {
-						sCodec = "h264_nvenc";
-					}
-					sCmd += " -c:v " + sCodec + " -profile:v high -level 4.1";
-					break;
-				case 1: // h265/he-aac
-					sCodec = "libx265";
-					if (cboHW.SelectedIndex == 3) {
-						sCodec = "hevc_nvenc";
-					}
-					sCmd += " -c:v " + sCodec;
-					break;	
-			}
+				case 0: // h264
+					sCmd += " -c:v libx264";
+                    switch (cboVPreset.SelectedIndex)
+                    {
+                        case 0: // best
+                            sCmd += " -preset slow";
+                            break;
+                        case 1: // good
+                            sCmd += " -preset medium";
+                            break;
+                        case 2: // fast
+                            sCmd += " -preset fast";
+                            break;
+                    }
+                    break;
+				case 1: // h265
+					sCmd += " -c:v libx265";
+                    switch (cboVPreset.SelectedIndex)
+                    {
+                        case 0: // best
+                            sCmd += " -preset slow";
+                            break;
+                        case 1: // good
+                            sCmd += " -preset medium";
+                            break;
+                        case 2: // fast
+                            sCmd += " -preset fast";
+                            break;
+                    }
+                    break;
+                case 2: // VP8
+                    sCmd += " -c:v libvpx";
+                    break;
+                case 3: // VP9
+                    sCmd += " -c:v libvpx-vp9 -row-mt 1";
+                    break;
+            }
 
             sCmd += " -c:a libopus -ac 2";
-
-            // Quality
-            switch (cboVPreset.SelectedIndex) {
-				case 0: // best
-					sCmd += " -preset slow";		
-					break;
-				case 1: // good
-					sCmd += " -preset medium";		
-					break;
-				case 2: // fast
-					sCmd += " -preset fast";		
-					break;					
-			}
-			
+	
 			// Resize
 			switch (cboFResize.SelectedIndex) {
 				case 1: // 720
@@ -180,7 +185,6 @@ namespace recode.net
             lstFiles.Rows[iEncoding].Cells[0].Value = "encoding";
 
             // *** Start
-            Clipboard.SetText(sCmd);
             try {
 	            startInfo.Arguments = sCmd;					
 	    		exeProcess.StartInfo = startInfo;
@@ -244,10 +248,6 @@ namespace recode.net
 		void CboHWSelectedIndexChanged(object sender, EventArgs e)
 		{
 			cboFResize.Enabled = true;
-			if (cboHW.SelectedIndex > 0) {
-				cboFResize.Enabled = false;
-				cboFResize.SelectedIndex = 0;
-			}
 		}
 	}
 }
