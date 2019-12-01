@@ -231,6 +231,7 @@ namespace recode.net
             this.cboACodec.Name = "cboACodec";
             this.cboACodec.Size = new System.Drawing.Size(212, 21);
             this.cboACodec.TabIndex = 13;
+            this.cboACodec.SelectedIndexChanged += new System.EventHandler(this.cboACodec_SelectedIndexChanged);
             // 
             // MainForm
             // 

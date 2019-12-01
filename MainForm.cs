@@ -48,7 +48,7 @@ namespace recode.net
 			
 			// UI Defaults
 			cboVCodec.SelectedIndex = 0;
-            cboACodec.SelectedIndex = 0;
+            cboACodec.SelectedIndex = 2; // Vorbis 2.0
 			cboVPreset.SelectedIndex = 0;
 			cboATrack.SelectedIndex = 0;
 			cboFResize.SelectedIndex = 0;
@@ -219,13 +219,13 @@ namespace recode.net
 	            startInfo.Arguments = sCmd;
                 exeProcess = new Process();
 	    		exeProcess.StartInfo = startInfo;            
-	            exeProcess.Start();
                 exeProcess.EnableRaisingEvents = true;
                 exeProcess.Exited += new EventHandler(myProcess_Exited);
                 exeProcess.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
                 exeProcess.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
-                exeProcess.PriorityClass = ProcessPriorityClass.Idle;	            
-	            exeProcess.BeginOutputReadLine();
+                exeProcess.PriorityClass = ProcessPriorityClass.Idle;
+                exeProcess.Start();
+                exeProcess.BeginOutputReadLine();
 	            exeProcess.BeginErrorReadLine();	
             }
             catch (Exception ex)
@@ -293,6 +293,19 @@ namespace recode.net
                 exeProcess.Kill();
             }
             saveConfig();
+        }
+
+        private void cboACodec_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (cboACodec.SelectedIndex)
+            {
+                case 0: txtABitrate.Text = "32"; break;
+                case 1: txtABitrate.Text = "128"; break;
+                case 2: txtABitrate.Text = "64"; break;
+                case 3: txtABitrate.Text = "256"; break;
+                case 4: txtABitrate.Text = "128"; break;
+                case 5: txtABitrate.Text = "320"; break;
+            }
         }
     }
 }
