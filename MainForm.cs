@@ -55,12 +55,6 @@ namespace recode.net
 
             loadConfig();
 
-            // Process events
-            exeProcess.EnableRaisingEvents = true;
-            exeProcess.Exited += new EventHandler(myProcess_Exited);
-            exeProcess.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
-            exeProcess.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
-
             // Tooltips
             ToolTip toolTip1 = new ToolTip();
 			toolTip1.ShowAlways = true;
@@ -222,10 +216,15 @@ namespace recode.net
 
             // *** Start
             try {
-	            startInfo.Arguments = sCmd;					
+	            startInfo.Arguments = sCmd;
+                exeProcess = new Process();
 	    		exeProcess.StartInfo = startInfo;            
-	            exeProcess.Start();   
-				exeProcess.PriorityClass = ProcessPriorityClass.Idle;	            
+	            exeProcess.Start();
+                exeProcess.EnableRaisingEvents = true;
+                exeProcess.Exited += new EventHandler(myProcess_Exited);
+                exeProcess.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
+                exeProcess.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
+                exeProcess.PriorityClass = ProcessPriorityClass.Idle;	            
 	            exeProcess.BeginOutputReadLine();
 	            exeProcess.BeginErrorReadLine();	
             }
