@@ -1,9 +1,0 @@
-C:\Data\Repos\recode.net\obj\Debug\recode.net.csprojAssemblyReference.cache
-C:\Data\Repos\recode.net\obj\Debug\recode.net.MainForm.resources
-C:\Data\Repos\recode.net\obj\Debug\recode.net.Properties.Resources.resources
-C:\Data\Repos\recode.net\obj\Debug\recode.net.csproj.GenerateResource.cache
-C:\Data\Repos\recode.net\bin\Debug\recode.net.exe.config
-C:\Data\Repos\recode.net\bin\Debug\recode.net.exe
-C:\Data\Repos\recode.net\bin\Debug\recode.net.pdb
-C:\Data\Repos\recode.net\obj\Debug\recode.net.exe
-C:\Data\Repos\recode.net\obj\Debug\recode.net.pdb

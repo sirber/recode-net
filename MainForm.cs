@@ -110,7 +110,7 @@ namespace recode.net
             startInfo.UseShellExecute = false;
             startInfo.RedirectStandardOutput = true;
             startInfo.RedirectStandardError = true;
-            startInfo.FileName = "ffmpeg/ffmpeg.exe";
+            startInfo.FileName = "ffmpeg.exe";
 			
             // CmdLine (base)
             string sCmd = "";
