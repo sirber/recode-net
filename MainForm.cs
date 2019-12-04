@@ -93,14 +93,7 @@ namespace recode.net
             // Get file information
             /* todo */
 
-            // Config process
-            exeProcess = new Process();
-            startInfo.CreateNoWindow = true;
-            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            startInfo.UseShellExecute = false;
-            startInfo.RedirectStandardOutput = true;
-            startInfo.RedirectStandardError = true;
-            startInfo.FileName = "ffmpeg.exe";
+
 			
             // CmdLine (base)
             string sCmd = "-hide_banner -hwaccel dxva2 -i \"" + sFile + "\"";
@@ -244,13 +237,23 @@ namespace recode.net
 
             // *** Start
             try {
-	            startInfo.Arguments = sCmd;
+                // Config process
+                startInfo = new ProcessStartInfo();
+                startInfo.CreateNoWindow = true;
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                startInfo.UseShellExecute = false;
+                startInfo.RedirectStandardOutput = true;
+                startInfo.RedirectStandardError = true;
+                startInfo.FileName = "ffmpeg.exe";
+                startInfo.Arguments = sCmd;
+
                 exeProcess = new Process();
 	    		exeProcess.StartInfo = startInfo;            
                 exeProcess.EnableRaisingEvents = true;
                 exeProcess.Exited += new EventHandler(myProcess_Exited);
                 exeProcess.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
                 exeProcess.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
+
                 bool started = exeProcess.Start();
                 if (started)
                 {
@@ -262,7 +265,8 @@ namespace recode.net
             catch (Exception ex)
 	        {
 	            setStatus("Error: " + ex.Message);
-	            return;
+                lstFiles.Rows[iEncoding].Cells[0].Value = "error";
+                isEncoding = false;
 	        }   
 		}
 		
