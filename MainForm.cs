@@ -13,7 +13,7 @@ namespace recode.net
 	/// </summary>
 	public partial class MainForm : Form
 	{
-		private string version = "2019-12-01 dev";
+		private string version = "2019-12-03 dev";
 		private bool isEncoding = false;
 		private int iEncoding = 0;
 		private ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -69,7 +69,10 @@ namespace recode.net
 				isEncoding = false;
 				setStatus("canceled.");
 				lstFiles.Rows[iEncoding].Cells[0].Value = "ready";
-				exeProcess.Kill();
+                if (!exeProcess.HasExited)
+                {
+				    exeProcess.Kill();
+                }
                 return;
 			}
 
@@ -100,11 +103,18 @@ namespace recode.net
             startInfo.FileName = "ffmpeg.exe";
 			
             // CmdLine (base)
-            string sCmd = "-hwaccel dxva2 -i \"" + sFile + "\"";
+            string sCmd = "-hide_banner -hwaccel dxva2 -i \"" + sFile + "\"";
 
             // Video
-            sCmd += " -map 0:v:0 -b:v " + txtVBitrate.Text + "K -qmin 4 -g 8";
-			switch (cboVCodec.SelectedIndex) {
+            sCmd += " -map 0:v:0";
+            if (Int32.Parse(txtVBitrate.Text) > 100) {
+                sCmd += " -b:v " + txtVBitrate.Text + "K";
+            } else
+            {
+                sCmd += " -q " + txtVBitrate.Text;
+            }
+
+            switch (cboVCodec.SelectedIndex) {
 				case 0: // h264
 					sCmd += " -c:v libx264";
                     switch (cboVPreset.SelectedIndex)
@@ -120,7 +130,22 @@ namespace recode.net
                             break;
                     }
                     break;
-				case 1: // h265
+                case 1: // h264 (intel)
+                    sCmd += " -c:v h264_qsv";
+                    switch (cboVPreset.SelectedIndex)
+                    {
+                        case 0: // best
+                            sCmd += " -preset slow";
+                            break;
+                        case 1: // good
+                            sCmd += " -preset medium";
+                            break;
+                        case 2: // fast
+                            sCmd += " -preset fast";
+                            break;
+                    }
+                    break;
+				case 2: // h265
 					sCmd += " -c:v libx265";
                     switch (cboVPreset.SelectedIndex)
                     {
@@ -135,10 +160,25 @@ namespace recode.net
                             break;
                     }
                     break;
-                case 2: // VP8
+                case 3: // h265 (intel)
+                    sCmd += " -c:v hevc_qsv";
+                    switch (cboVPreset.SelectedIndex)
+                    {
+                        case 0: // best
+                            sCmd += " -preset slow";
+                            break;
+                        case 1: // good
+                            sCmd += " -preset medium";
+                            break;
+                        case 2: // fast
+                            sCmd += " -preset fast";
+                            break;
+                    }
+                    break;
+                case 4: // VP8
                     sCmd += " -c:v libvpx";
                     break;
-                case 3: // VP9
+                case 5: // VP9
                     sCmd += " -c:v libvpx-vp9 -row-mt 1";
                     break;
             }
@@ -211,10 +251,13 @@ namespace recode.net
                 exeProcess.Exited += new EventHandler(myProcess_Exited);
                 exeProcess.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
                 exeProcess.ErrorDataReceived += new DataReceivedEventHandler(OutputHandler);
-                exeProcess.PriorityClass = ProcessPriorityClass.Idle;
-                exeProcess.Start();
-                exeProcess.BeginOutputReadLine();
-	            exeProcess.BeginErrorReadLine();	
+                bool started = exeProcess.Start();
+                if (started)
+                {
+                    exeProcess.PriorityClass = ProcessPriorityClass.Idle;
+                    exeProcess.BeginOutputReadLine();
+	                exeProcess.BeginErrorReadLine();	
+                }
             }
             catch (Exception ex)
 	        {
@@ -276,7 +319,7 @@ namespace recode.net
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (isEncoding)
+            if (isEncoding && !exeProcess.HasExited)
             {
                 exeProcess.Kill();
             }
@@ -299,10 +342,16 @@ namespace recode.net
         {
             switch (cboVCodec.SelectedIndex)
             {
-                case 0: txtVBitrate.Text = "4096"; break;
-                case 1: txtVBitrate.Text = "2048"; break;
-                case 2: txtVBitrate.Text = "4096"; break;
-                case 3: txtVBitrate.Text = "2048"; break;
+                case 0:
+                case 1:
+                case 4:
+                    txtVBitrate.Text = "4096"; 
+                    break;
+                case 2:
+                case 3:
+                case 5:
+                    txtVBitrate.Text = "2048"; 
+                    break;
             }
         }
     }
