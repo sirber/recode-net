@@ -100,13 +100,7 @@ namespace recode.net
 
             // Video
             sCmd += " -map 0:v:0";
-            if (Int32.Parse(txtVBitrate.Text) > 100) {
-                sCmd += " -b:v " + txtVBitrate.Text + "K";
-            } else
-            {
-                sCmd += " -q " + txtVBitrate.Text;
-            }
-
+            bool crf = true;
             switch (cboVCodec.SelectedIndex) {
 				case 0: // h264
 					sCmd += " -c:v libx264";
@@ -124,6 +118,7 @@ namespace recode.net
                     }
                     break;
                 case 1: // h264 (intel)
+                    crf = false;
                     sCmd += " -c:v h264_qsv";
                     switch (cboVPreset.SelectedIndex)
                     {
@@ -154,6 +149,7 @@ namespace recode.net
                     }
                     break;
                 case 3: // h265 (intel)
+                    crf = false;
                     sCmd += " -c:v hevc_qsv";
                     switch (cboVPreset.SelectedIndex)
                     {
@@ -174,6 +170,23 @@ namespace recode.net
                 case 5: // VP9
                     sCmd += " -c:v libvpx-vp9 -row-mt 1";
                     break;
+            }
+
+            if (Int32.Parse(txtVBitrate.Text) > 100)
+            {
+                sCmd += " -b:v " + txtVBitrate.Text + "K";
+            }
+            else
+            {
+                if (crf)
+                {
+                    sCmd += " -crf " + txtVBitrate.Text;
+                }
+                else
+                {
+                    // sCmd += " -q " + txtVBitrate.Text;
+                    sCmd += " -global_quality " + txtVBitrate.Text;
+                }
             }
 
             // Audio

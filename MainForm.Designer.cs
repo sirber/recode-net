@@ -49,12 +49,12 @@ namespace recode.net
             this.button1 = new System.Windows.Forms.Button();
             this.cboATrack = new System.Windows.Forms.ComboBox();
             this.cboVPreset = new System.Windows.Forms.ComboBox();
-            this.txtVBitrate = new System.Windows.Forms.TextBox();
-            this.txtABitrate = new System.Windows.Forms.TextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.cboFResize = new System.Windows.Forms.ComboBox();
             this.cboACodec = new System.Windows.Forms.ComboBox();
+            this.txtVBitrate = new System.Windows.Forms.ComboBox();
+            this.txtABitrate = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.lstFiles)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -171,22 +171,6 @@ namespace recode.net
             this.cboVPreset.Size = new System.Drawing.Size(121, 21);
             this.cboVPreset.TabIndex = 6;
             // 
-            // txtVBitrate
-            // 
-            this.txtVBitrate.Location = new System.Drawing.Point(230, 248);
-            this.txtVBitrate.Name = "txtVBitrate";
-            this.txtVBitrate.Size = new System.Drawing.Size(128, 20);
-            this.txtVBitrate.TabIndex = 7;
-            this.txtVBitrate.Text = "2048";
-            // 
-            // txtABitrate
-            // 
-            this.txtABitrate.Location = new System.Drawing.Point(230, 274);
-            this.txtABitrate.Name = "txtABitrate";
-            this.txtABitrate.Size = new System.Drawing.Size(128, 20);
-            this.txtABitrate.TabIndex = 9;
-            this.txtABitrate.Text = "64";
-            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -236,16 +220,49 @@ namespace recode.net
             this.cboACodec.TabIndex = 13;
             this.cboACodec.SelectedIndexChanged += new System.EventHandler(this.cboACodec_SelectedIndexChanged);
             // 
+            // txtVBitrate
+            // 
+            this.txtVBitrate.FormattingEnabled = true;
+            this.txtVBitrate.Items.AddRange(new object[] {
+            "18",
+            "20",
+            "22",
+            "24",
+            "30",
+            "1024",
+            "2048",
+            "4096"});
+            this.txtVBitrate.Location = new System.Drawing.Point(230, 247);
+            this.txtVBitrate.Name = "txtVBitrate";
+            this.txtVBitrate.Size = new System.Drawing.Size(128, 21);
+            this.txtVBitrate.TabIndex = 14;
+            // 
+            // txtABitrate
+            // 
+            this.txtABitrate.FormattingEnabled = true;
+            this.txtABitrate.Items.AddRange(new object[] {
+            "32",
+            "64",
+            "96",
+            "128",
+            "192",
+            "256",
+            "320"});
+            this.txtABitrate.Location = new System.Drawing.Point(231, 274);
+            this.txtABitrate.Name = "txtABitrate";
+            this.txtABitrate.Size = new System.Drawing.Size(127, 21);
+            this.txtABitrate.TabIndex = 15;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(786, 328);
+            this.Controls.Add(this.txtABitrate);
+            this.Controls.Add(this.txtVBitrate);
             this.Controls.Add(this.cboACodec);
             this.Controls.Add(this.cboFResize);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.txtABitrate);
-            this.Controls.Add(this.txtVBitrate);
             this.Controls.Add(this.cboVPreset);
             this.Controls.Add(this.cboATrack);
             this.Controls.Add(this.button1);
@@ -268,8 +285,6 @@ namespace recode.net
 		}
 		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
 		private System.Windows.Forms.StatusStrip statusStrip1;
-		private System.Windows.Forms.TextBox txtABitrate;
-		private System.Windows.Forms.TextBox txtVBitrate;
 		private System.Windows.Forms.ComboBox cboVPreset;
 		private System.Windows.Forms.ComboBox cboATrack;
 		private System.Windows.Forms.Button button1;
@@ -283,5 +298,7 @@ namespace recode.net
 		private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem cleanToolStripMenuItem;
         private System.Windows.Forms.ComboBox cboACodec;
+        private System.Windows.Forms.ComboBox txtVBitrate;
+        private System.Windows.Forms.ComboBox txtABitrate;
     }
 }
