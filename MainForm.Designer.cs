@@ -123,9 +123,13 @@ namespace recode.net
             this.cboVCodec.FormattingEnabled = true;
             this.cboVCodec.Items.AddRange(new object[] {
             "H264",
+            "H264 (amd)",
             "H264 (intel)",
+            "H264 (nvidia)",
             "H265",
+            "H265 (amd)",
             "H265 (intel)",
+            "H265 (nvidia)",
             "VP8",
             "VP9"});
             this.cboVCodec.Location = new System.Drawing.Point(12, 247);

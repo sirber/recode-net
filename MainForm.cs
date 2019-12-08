@@ -36,6 +36,10 @@ namespace recode.net
 		void Form1_DragDrop(object sender, DragEventArgs e) {
 			string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 			foreach (string file in files) {
+                if (!File.Exists(file))
+                {
+                    continue;
+                }
 				DataGridViewRow row = (DataGridViewRow) lstFiles.RowTemplate.Clone();
 				row.CreateCells(lstFiles, "ready", Path.GetFileName(file), file);
 				lstFiles.Rows.Add(row);
@@ -100,7 +104,7 @@ namespace recode.net
 
             // Video
             sCmd += " -map 0:v:0";
-            bool crf = true;
+            string crf = "crf";
             switch (cboVCodec.SelectedIndex) {
 				case 0: // h264
 					sCmd += " -c:v libx264";
@@ -117,23 +121,11 @@ namespace recode.net
                             break;
                     }
                     break;
-                case 1: // h264 (intel)
-                    crf = false;
-                    sCmd += " -c:v h264_qsv";
-                    switch (cboVPreset.SelectedIndex)
-                    {
-                        case 0: // best
-                            sCmd += " -preset slow";
-                            break;
-                        case 1: // good
-                            sCmd += " -preset medium";
-                            break;
-                        case 2: // fast
-                            sCmd += " -preset fast";
-                            break;
-                    }
+                case 2: // h264 (intel)
+                    crf = "global_quality";
+                    sCmd += " -c:v h264_qsv -preset slow";
                     break;
-				case 2: // h265
+				case 4: // h265
 					sCmd += " -c:v libx265";
                     switch (cboVPreset.SelectedIndex)
                     {
@@ -148,27 +140,31 @@ namespace recode.net
                             break;
                     }
                     break;
-                case 3: // h265 (intel)
-                    crf = false;
-                    sCmd += " -c:v hevc_qsv";
-                    switch (cboVPreset.SelectedIndex)
-                    {
-                        case 0: // best
-                            sCmd += " -preset slow";
-                            break;
-                        case 1: // good
-                            sCmd += " -preset medium";
-                            break;
-                        case 2: // fast
-                            sCmd += " -preset fast";
-                            break;
-                    }
+                case 6: // h265 (intel)
+                    crf = "global_quality";
+                    sCmd += " -c:v hevc_qsv -preset slow";
                     break;
-                case 4: // VP8
+                case 8: // VP8
                     sCmd += " -c:v libvpx";
                     break;
-                case 5: // VP9
+                case 9: // VP9
                     sCmd += " -c:v libvpx-vp9 -row-mt 1";
+                    break;
+                case 1: // H264 (amd)
+                    crf = "rc 0 -qp_i ";
+                    sCmd += " -c:v h264_amf -quality 2";
+                    break;
+                case 5: // H265 (amd)
+                    crf = "rc 0 -qp_i ";
+                    sCmd += " -c:v hevc_amf -quality 0";
+                    break;
+                case 3: // H264 (nvidia)
+                    crf = "cq";
+                    sCmd += " -c:v h264_nvenc";
+                    break;
+                case 7: // H265 (nvidia)
+                    crf = "cq";
+                    sCmd += " -c:v hevc_nvenc"; // -cq
                     break;
             }
 
@@ -178,15 +174,7 @@ namespace recode.net
             }
             else
             {
-                if (crf)
-                {
-                    sCmd += " -crf " + txtVBitrate.Text;
-                }
-                else
-                {
-                    // sCmd += " -q " + txtVBitrate.Text;
-                    sCmd += " -global_quality " + txtVBitrate.Text;
-                }
+                sCmd += " -" + crf + " " + txtVBitrate.Text;
             }
 
             // Audio
@@ -235,7 +223,7 @@ namespace recode.net
 			}
 
             // Subtitles (all)
-            sCmd += " -map 0:s -c:s copy";
+            sCmd += " -map 0:s? -c:s copy";
 			
 			// Output
 			sCmd += " -y \"" + sFile + ".out.mkv\"";
