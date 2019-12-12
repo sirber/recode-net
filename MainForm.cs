@@ -105,7 +105,7 @@ namespace recode.net
             // Video
             sCmd += " -map 0:v:0";
             string crf = "crf";
-            switch (cboVCodec.SelectedIndex) {
+            switch (cboVCodec.SelectedIndex) { // TODO: use selecetd text instead of index
 				case 0: // h264
 					sCmd += " -c:v libx264";
                     switch (cboVPreset.SelectedIndex)
@@ -148,6 +148,7 @@ namespace recode.net
                     sCmd += " -c:v libvpx";
                     break;
                 case 9: // VP9
+                    crf = "b:v 0 -crf";
                     sCmd += " -c:v libvpx-vp9 -row-mt 1";
                     break;
                 case 1: // H264 (amd)
@@ -208,6 +209,7 @@ namespace recode.net
 
 			// Resize
 			switch (cboFResize.SelectedIndex) {
+                // 0: no resize
                 case 1: // 1080
                     sCmd += " -vf scale=out_h:1080";
                     break;
