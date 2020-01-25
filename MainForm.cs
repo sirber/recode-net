@@ -148,6 +148,7 @@ namespace recode.net
                     sCmd += " -c:v libvpx";
                     break;
                 case 9: // VP9
+                    crf = "b:v 0 -crf";
                     sCmd += " -c:v libvpx-vp9 -row-mt 1";
                     break;
                 case 1: // H264 (amd)
@@ -183,6 +184,7 @@ namespace recode.net
 
 			// Resize
 			switch (cboFResize.SelectedIndex) {
+                // 0: no resize
                 case 1: // 1080
                     sCmd += " -vf scale=out_h:1080";
                     break;
