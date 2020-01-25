@@ -136,7 +136,6 @@ namespace recode.net
             this.cboVCodec.Name = "cboVCodec";
             this.cboVCodec.Size = new System.Drawing.Size(212, 21);
             this.cboVCodec.TabIndex = 1;
-            this.cboVCodec.SelectedIndexChanged += new System.EventHandler(this.cboVCodec_SelectedIndexChanged);
             // 
             // button1
             // 
@@ -209,20 +208,15 @@ namespace recode.net
             // 
             // cboACodec
             // 
-            this.cboACodec.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboACodec.FormattingEnabled = true;
             this.cboACodec.Items.AddRange(new object[] {
-            "Opus (2.0)",
-            "Opus (5.1)",
-            "Vorbis (2.0)",
-            "Vorbis (5.1)",
-            "AAC (2.0)",
-            "AAC (5.1)"});
+            "libopus",
+            "libvorvis",
+            "aac"});
             this.cboACodec.Location = new System.Drawing.Point(12, 274);
             this.cboACodec.Name = "cboACodec";
             this.cboACodec.Size = new System.Drawing.Size(212, 21);
             this.cboACodec.TabIndex = 13;
-            this.cboACodec.SelectedIndexChanged += new System.EventHandler(this.cboACodec_SelectedIndexChanged);
             // 
             // txtVBitrate
             // 

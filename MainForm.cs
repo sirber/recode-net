@@ -52,7 +52,7 @@ namespace recode.net
 			
 			// UI Defaults
 			cboVCodec.SelectedIndex = 0;
-            cboACodec.SelectedIndex = 2; // Vorbis 2.0
+            cboACodec.SelectedIndex = 0;
 			cboVPreset.SelectedIndex = 0;
 			cboATrack.SelectedIndex = 0;
 			cboFResize.SelectedIndex = 0;
@@ -104,7 +104,7 @@ namespace recode.net
 
             // Video
             sCmd += " -map 0:v:0";
-            string crf = "crf";
+            string crf = "-v:crf";
             switch (cboVCodec.SelectedIndex) {
 				case 0: // h264
 					sCmd += " -c:v libx264";
@@ -122,7 +122,7 @@ namespace recode.net
                     }
                     break;
                 case 2: // h264 (intel)
-                    crf = "global_quality";
+                    crf = "-q:v";
                     sCmd += " -c:v h264_qsv -preset slow";
                     break;
 				case 4: // h265
@@ -141,7 +141,7 @@ namespace recode.net
                     }
                     break;
                 case 6: // h265 (intel)
-                    crf = "global_quality";
+                    crf = "-q:v";
                     sCmd += " -c:v hevc_qsv -preset slow";
                     break;
                 case 8: // VP8
@@ -151,19 +151,19 @@ namespace recode.net
                     sCmd += " -c:v libvpx-vp9 -row-mt 1";
                     break;
                 case 1: // H264 (amd)
-                    crf = "rc 0 -qp_i ";
+                    crf = "-rc 0 -qp_i ";
                     sCmd += " -c:v h264_amf -quality 2";
                     break;
                 case 5: // H265 (amd)
-                    crf = "rc 0 -qp_i ";
+                    crf = "-rc 0 -qp_i ";
                     sCmd += " -c:v hevc_amf -quality 0";
                     break;
                 case 3: // H264 (nvidia)
-                    crf = "cq";
+                    crf = "-v:cq";
                     sCmd += " -c:v h264_nvenc";
                     break;
                 case 7: // H265 (nvidia)
-                    crf = "cq";
+                    crf = "-v:cq";
                     sCmd += " -c:v hevc_nvenc"; // -cq
                     break;
             }
@@ -174,37 +174,12 @@ namespace recode.net
             }
             else
             {
-                sCmd += " -" + crf + " " + txtVBitrate.Text;
+                sCmd += " " + crf + " " + txtVBitrate.Text;
             }
 
             // Audio
-            sCmd += " -map 0:a:" + cboATrack.SelectedIndex + "? -b:a " + txtABitrate.Text + "K";
-            switch(cboACodec.SelectedIndex)
-            {
-                case 0: 
-                case 1:
-                    sCmd += " -c:a libopus";
-                    break;
-
-                case 2:
-                case 3:
-                    sCmd += " -c:a libvorbis";
-                    break;
-
-                case 4:
-                case 5:
-                    sCmd += " -c:a aac";
-                    break;
-            }
-
-            switch(cboACodec.SelectedIndex)
-            {
-                case 0:
-                case 2:
-                case 4:
-                    sCmd += " -ac 2";
-                    break;
-            }
+            sCmd += " -map 0:a:" + cboATrack.SelectedIndex + "? -b:a " + txtABitrate.Text + "K -ac 2 ";
+            sCmd += " -c:a " + cboACodec.Text;
 
 			// Resize
 			switch (cboFResize.SelectedIndex) {
@@ -226,7 +201,7 @@ namespace recode.net
             sCmd += " -map 0:s? -c:s copy";
 			
 			// Output
-			sCmd += " -y \"" + sFile + ".out.mkv\"";
+			sCmd += " -y \"" + sFile + ".out.mkv\""; // FIXME: create better scheme
 			
 			// Debug!
 			Clipboard.SetText(sCmd);
@@ -329,35 +304,6 @@ namespace recode.net
                 exeProcess.Kill();
             }
         }
-
-        private void cboACodec_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (cboACodec.SelectedIndex)
-            {
-                case 0: txtABitrate.Text = "32"; break;
-                case 1: txtABitrate.Text = "128"; break;
-                case 2: txtABitrate.Text = "64"; break;
-                case 3: txtABitrate.Text = "256"; break;
-                case 4: txtABitrate.Text = "128"; break;
-                case 5: txtABitrate.Text = "320"; break;
-            }
-        }
-
-        private void cboVCodec_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (cboVCodec.SelectedIndex)
-            {
-                case 0:
-                case 1:
-                case 4:
-                    txtVBitrate.Text = "4096"; 
-                    break;
-                case 2:
-                case 3:
-                case 5:
-                    txtVBitrate.Text = "2048"; 
-                    break;
-            }
-        }
+        
     }
 }
