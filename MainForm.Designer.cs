@@ -122,10 +122,10 @@ namespace recode.net
             this.cboVCodec.FormattingEnabled = true;
             this.cboVCodec.Items.AddRange(new object[] {
             "libx264",
+            "libx265",
             "h264_qsv",
             "h264_nvenc",
             "h264_amf",
-            "libx264",
             "hevc_qsv",
             "hevc_nvenc",
             "hevc_amf",

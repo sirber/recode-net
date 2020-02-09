@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using recode.net.lib;
 
 namespace recode.net
 {
@@ -13,11 +14,13 @@ namespace recode.net
 	/// </summary>
 	public partial class MainForm : Form
 	{
-		private string version = "2019-12-03 dev";
+		private string version = "2020-12-08 dev";
 		private bool isEncoding = false;
 		private int iEncoding = 0;
 		private ProcessStartInfo startInfo = new ProcessStartInfo();
 		private Process exeProcess = new Process();
+
+        private FfmpegHandler ffmpeg = new FfmpegHandler();
 
         public MainForm()
 		{
@@ -51,8 +54,6 @@ namespace recode.net
 			setStatus("Recode.NET v/" + version);
 			
 			// UI Defaults
-			cboVCodec.SelectedIndex = 0;
-            cboACodec.SelectedIndex = 0;
 			cboVPreset.SelectedIndex = 0;
 			cboATrack.SelectedIndex = 0;
 			cboFResize.SelectedIndex = 0;
@@ -65,6 +66,8 @@ namespace recode.net
 		
 		void Button1Click(object sender, EventArgs e)
 		{
+            // TODO: fill FFmpegHandler
+
 			encode();
         }
 		
@@ -103,11 +106,11 @@ namespace recode.net
             string sCmd = "-hide_banner -hwaccel dxva2 -i \"" + sFile + "\"";
 
             // Video
-            sCmd += " -map 0:v:0";
+            sCmd += " -map 0:v:0 -c:v " + cboVCodec.Text;
             string crf = "-v:crf";
-            switch (cboVCodec.SelectedIndex) {
-				case 0: // h264
-					sCmd += " -c:v libx264";
+            switch (cboVCodec.Text) {
+				case "libx264":
+                case "libx265":
                     switch (cboVPreset.SelectedIndex)
                     {
                         case 0: // best
@@ -121,51 +124,31 @@ namespace recode.net
                             break;
                     }
                     break;
-                case 2: // h264 (intel)
+                case "h264_qsv": // h264 (intel)
                     crf = "-q:v";
-                    sCmd += " -c:v h264_qsv -preset slow";
+                    sCmd += " -preset slow";
                     break;
-				case 4: // h265
-					sCmd += " -c:v libx265";
-                    switch (cboVPreset.SelectedIndex)
-                    {
-                        case 0: // best
-                            sCmd += " -preset slow";
-                            break;
-                        case 1: // good
-                            sCmd += " -preset medium";
-                            break;
-                        case 2: // fast
-                            sCmd += " -preset fast";
-                            break;
-                    }
-                    break;
-                case 6: // h265 (intel)
+                case "hevc_qsv": // h265 (intel)
                     crf = "-q:v";
-                    sCmd += " -c:v hevc_qsv -preset slow";
+                    sCmd += " -preset slow";
                     break;
-                case 8: // VP8
-                    sCmd += " -c:v libvpx";
+                case "libvpx": // VP8
                     break;
-                case 9: // VP9
-                    crf = "b:v 0 -crf";
-                    sCmd += " -c:v libvpx-vp9 -row-mt 1";
+                case "libvpx-vp9": // VP9
+                    crf = "b:v 0 -v:crf";
+                    sCmd += " -row-mt 1";
                     break;
-                case 1: // H264 (amd)
+                case "h264_amf": // H264 (amd)
                     crf = "-rc 0 -qp_i ";
-                    sCmd += " -c:v h264_amf -quality 2";
+                    sCmd += " -quality 2";
                     break;
-                case 5: // H265 (amd)
+                case "hevc_amf": // H265 (amd)
                     crf = "-rc 0 -qp_i ";
-                    sCmd += " -c:v hevc_amf -quality 0";
+                    sCmd += " -quality 0";
                     break;
-                case 3: // H264 (nvidia)
+                case "h264_nvenc": // H264 (nvidia)
+                case "hevc_nvenc": // H265 (nvidia)
                     crf = "-v:cq";
-                    sCmd += " -c:v h264_nvenc";
-                    break;
-                case 7: // H265 (nvidia)
-                    crf = "-v:cq";
-                    sCmd += " -c:v hevc_nvenc"; // -cq
                     break;
             }
 
