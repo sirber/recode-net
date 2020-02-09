@@ -119,23 +119,23 @@ namespace recode.net
             // 
             // cboVCodec
             // 
-            this.cboVCodec.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboVCodec.FormattingEnabled = true;
             this.cboVCodec.Items.AddRange(new object[] {
-            "H264",
-            "H264 (amd)",
-            "H264 (intel)",
-            "H264 (nvidia)",
-            "H265",
-            "H265 (amd)",
-            "H265 (intel)",
-            "H265 (nvidia)",
-            "VP8",
-            "VP9"});
+            "libx264",
+            "h264_qsv",
+            "h264_nvenc",
+            "h264_amf",
+            "libx264",
+            "hevc_qsv",
+            "hevc_nvenc",
+            "hevc_amf",
+            "libvpx",
+            "libvpx-vp9"});
             this.cboVCodec.Location = new System.Drawing.Point(12, 247);
             this.cboVCodec.Name = "cboVCodec";
             this.cboVCodec.Size = new System.Drawing.Size(212, 21);
             this.cboVCodec.TabIndex = 1;
+            this.cboVCodec.Text = "libx264";
             // 
             // button1
             // 
@@ -217,6 +217,7 @@ namespace recode.net
             this.cboACodec.Name = "cboACodec";
             this.cboACodec.Size = new System.Drawing.Size(212, 21);
             this.cboACodec.TabIndex = 13;
+            this.cboACodec.Text = "libopus";
             // 
             // txtVBitrate
             // 
@@ -234,6 +235,7 @@ namespace recode.net
             this.txtVBitrate.Name = "txtVBitrate";
             this.txtVBitrate.Size = new System.Drawing.Size(128, 21);
             this.txtVBitrate.TabIndex = 14;
+            this.txtVBitrate.Text = "4096";
             // 
             // txtABitrate
             // 
@@ -250,6 +252,7 @@ namespace recode.net
             this.txtABitrate.Name = "txtABitrate";
             this.txtABitrate.Size = new System.Drawing.Size(127, 21);
             this.txtABitrate.TabIndex = 15;
+            this.txtABitrate.Text = "32";
             // 
             // MainForm
             // 

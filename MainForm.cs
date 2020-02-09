@@ -186,16 +186,16 @@ namespace recode.net
 			switch (cboFResize.SelectedIndex) {
                 // 0: no resize
                 case 1: // 1080
-                    sCmd += " -vf scale=out_h:1080";
+                    sCmd += " -vf scale=1920:1080:force_original_aspect_ratio=decrease";
                     break;
                 case 2: // 720
-					sCmd += " -vf scale=out_h:720";
+					sCmd += " -vf scale=1280:720:force_original_aspect_ratio=decrease";
 					break;
 				case 3: // 480
-					sCmd += " -vf scale=out_h:480";
+					sCmd += " -vf scale=-2:480:force_original_aspect_ratio=decrease";
 					break;
 				case 4: // 240
-					sCmd += " -vf scale=out_h:240";
+					sCmd += " -vf scale=-2:240:force_original_aspect_ratio=decrease";
 					break;				
 			}
 
