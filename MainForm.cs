@@ -189,7 +189,13 @@ namespace recode.net
 			sCmd += " -y \"" + sFile + ".out.mkv\""; // FIXME: create better scheme
 			
 			// Debug!
-			Clipboard.SetText(sCmd);
+            try
+            {
+			    Clipboard.SetText(sCmd);
+            } catch(Exception ex)
+            {
+
+            }
 
             // GUI
             isEncoding = true;
