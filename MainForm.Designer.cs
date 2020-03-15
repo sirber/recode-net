@@ -39,9 +39,6 @@ namespace recode.net
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.lstFiles = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,10 +62,6 @@ namespace recode.net
             this.lstFiles.AllowUserToAddRows = false;
             this.lstFiles.AllowUserToDeleteRows = false;
             this.lstFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.lstFiles.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
-            this.Column2,
-            this.Column3});
             this.lstFiles.ContextMenuStrip = this.contextMenuStrip1;
             this.lstFiles.Location = new System.Drawing.Point(12, 12);
             this.lstFiles.Name = "lstFiles";
@@ -76,25 +69,6 @@ namespace recode.net
             this.lstFiles.RowHeadersVisible = false;
             this.lstFiles.Size = new System.Drawing.Size(762, 229);
             this.lstFiles.TabIndex = 0;
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "Statut";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "Filename";
-            this.Column2.Name = "Column2";
-            this.Column2.ReadOnly = true;
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "Path";
-            this.Column3.Name = "Column3";
-            this.Column3.ReadOnly = true;
-            this.Column3.Width = 500;
             // 
             // contextMenuStrip1
             // 
@@ -290,10 +264,6 @@ namespace recode.net
 		private System.Windows.Forms.ComboBox cboATrack;
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.ComboBox cboVCodec;
-		private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
-		private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-		private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-		private System.Windows.Forms.DataGridView lstFiles;
 		private System.Windows.Forms.ComboBox cboFResize;
 		private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
@@ -301,5 +271,6 @@ namespace recode.net
         private System.Windows.Forms.ComboBox cboACodec;
         private System.Windows.Forms.ComboBox txtVBitrate;
         private System.Windows.Forms.ComboBox txtABitrate;
+        private System.Windows.Forms.DataGridView lstFiles;
     }
 }
