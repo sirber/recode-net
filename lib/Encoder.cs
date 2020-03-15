@@ -9,6 +9,11 @@ namespace recode.net.lib
         public EncodingStatus Status { get; set; }
     }
 
+    public class EncoderMessageEventArgs : EventArgs
+    {
+        public string Message { get; set; }
+    }
+
     class Encoder
     {
         private ProcessStartInfo startInfo;
@@ -16,9 +21,9 @@ namespace recode.net.lib
         private QueuedFile queuedFile;
 
         public event EventHandler<EncoderStoppedEventArgs> EncoderStopped;
+        public event EventHandler<EncoderMessageEventArgs> EncoderMessage;
 
-        public bool isEncoding { get; set; } = false;
-        public string lastLog { get; set; } = "";
+        public bool isEncoding { get; set; } = false; // FIXME: should be private. Form can have it's own variable.
 
         public Encoder(QueuedFile queuedFile)
         {
@@ -68,19 +73,31 @@ namespace recode.net.lib
             } 
             catch (Exception ex)
             {
-                lastLog = ex.Message;
                 isEncoding = false;
                 queuedFile.Status = EncodingStatus.Failed;
 
+                RaiseMessage(ex.Message);
                 Stop();
             }
         }
         private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
-            if (!String.IsNullOrEmpty(outLine.Data))
+            if (String.IsNullOrEmpty(outLine.Data))
             {
-                lastLog = outLine.Data;	
+                return;
             }
+
+            // Raise stop event
+            RaiseMessage(outLine.Data);
+        }
+
+        private void RaiseMessage(string message)
+        {
+            EncoderMessageEventArgs args = new EncoderMessageEventArgs
+            {
+                Message = message,
+            };
+            OnMessage(args);
         }
 
         private void myProcess_Exited(object sender, System.EventArgs e)
@@ -101,6 +118,12 @@ namespace recode.net.lib
         protected virtual void OnEncoderStop(EncoderStoppedEventArgs e)
         {
             EventHandler<EncoderStoppedEventArgs> handler = EncoderStopped;
+            handler?.Invoke(this, e);
+        }
+
+        protected virtual void OnMessage(EncoderMessageEventArgs e)
+        {
+            EventHandler<EncoderMessageEventArgs> handler = EncoderMessage;
             handler?.Invoke(this, e);
         }
 

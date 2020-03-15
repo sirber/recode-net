@@ -21,6 +21,7 @@ namespace recode.net
         Encoder encoder;
         BindingList<QueuedFile> queuedFiles = new BindingList<QueuedFile>();
         QueuedFile queuedFile;
+        string lastMessage = "";
 
         public MainForm()
 		{
@@ -108,12 +109,16 @@ namespace recode.net
             // Start and listen to events!
             encoder = new Encoder(queuedFile);
             encoder.EncoderStopped += EncoderOnStop;
+            encoder.EncoderMessage += EncoderMessage;
             encoder.Start(); 
         }
 
-        private void EncoderOnLog(string msg)
+        private void EncoderMessage(object sender, EncoderMessageEventArgs e)
         {
-            setStatus(msg);
+            Invoke((MethodInvoker) delegate
+            {
+                setStatus(e.Message);
+            });
         }
 
         private void EncoderOnStop(object sender, EncoderStoppedEventArgs e)
@@ -121,27 +126,16 @@ namespace recode.net
             // Get status
             queuedFile.Status = e.Status;
 
-            // Handle Cross-Thread stuff
-            if (lstFiles.InvokeRequired)
+            Invoke((MethodInvoker) delegate
             {
-                MethodInvoker invoker = new MethodInvoker(HandleEncoderStop);
-                lstFiles.Invoke(invoker);
-            } 
-            else
-            {
-                HandleEncoderStop();
-            }
+                lstFiles.Refresh();
+                if (queuedFile.Status == EncodingStatus.Done)
+                {
+                    setStatus("done!"); 
+                    StartEncode();
+                }
+            });
         }
-
-        private void HandleEncoderStop()
-        {
-            lstFiles.Refresh();
-            if (queuedFile.Status == EncodingStatus.Done)
-            {
-                StartEncode();
-            }
-        }
-
 	
 		void setStatus(string msg) {
 			toolStripStatusLabel1.Text = msg;	
