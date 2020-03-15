@@ -20,8 +20,6 @@ namespace recode.net
 		private ProcessStartInfo startInfo = new ProcessStartInfo();
 		private Process exeProcess = new Process();
 
-        private FfmpegHandler ffmpeg = new FfmpegHandler();
-
         public MainForm()
 		{
 			InitializeComponent();
@@ -97,11 +95,23 @@ namespace recode.net
             	return;
             }
 
-            // Get file information
-            /* todo */
+            /* NEW STUFF */
+            Job job = new Job{
+                FileSource = sFile,
+                FileDestination = FileHandler.GetDestinationFile(sFile),
+                VideoCodec = cboVCodec.Text,
+                VideoQuality = cboVPreset.SelectedIndex,
+                VideoBitrate = int.Parse(txtVBitrate.Text),
+                AudioCodec = cboACodec.Text,
+                AudioTrack = cboATrack.SelectedIndex,
+                AudioBitrate = int.Parse(txtABitrate.Text),
+            };
 
+            EncoderHandler ffmpeg = new EncoderHandler(job);
+            //ffmpeg.Encode();
 
-			
+            /* /NEW STUFF */
+
             // CmdLine (base)
             string sCmd = "-hide_banner -hwaccel dxva2 -i \"" + sFile + "\"";
 

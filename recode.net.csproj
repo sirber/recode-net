@@ -88,7 +88,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="lib\FfmpegHandler.cs" />
+    <Compile Include="lib\FileHandler.cs" />
+    <Compile Include="lib\EncoderHandler.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
