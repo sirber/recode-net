@@ -37,7 +37,7 @@ namespace recode.net.lib
 
         public void Start()
         {
-            if (!exeProcess.HasExited)
+            if (isEncoding)
             {
                 throw new Exception("Already encoding?");
             }

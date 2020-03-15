@@ -74,6 +74,11 @@ namespace recode.net
 		
 		void Button1Click(object sender, EventArgs e)
 		{
+            StartEncode();
+        }
+
+        private void StartEncode()
+        {
             // Already encoding?
             if (encoder != null && encoder.isEncoding)
             {
@@ -103,7 +108,7 @@ namespace recode.net
             // Start and listen to events!
             encoder = new Encoder(queuedFile);
             encoder.EncoderStopped += EncoderOnStop;
-            // encoder.Start(); 
+            encoder.Start(); 
         }
 
         private void EncoderOnLog(string msg)
@@ -113,17 +118,28 @@ namespace recode.net
 
         private void EncoderOnStop(object sender, EncoderStoppedEventArgs e)
         {
-            if (e.Status == EncodingStatus.Done)
+            // Get status
+            queuedFile.Status = e.Status;
+
+            // Handle Cross-Thread stuff
+            if (lstFiles.InvokeRequired)
             {
-                // TODO: update 
-            }
+                MethodInvoker invoker = new MethodInvoker(HandleEncoderStop);
+                lstFiles.Invoke(invoker);
+            } 
             else
             {
-
+                HandleEncoderStop();
             }
+        }
 
-            queuedFile.Status = e.Status;
+        private void HandleEncoderStop()
+        {
             lstFiles.Refresh();
+            if (queuedFile.Status == EncodingStatus.Done)
+            {
+                StartEncode();
+            }
         }
 
 	
@@ -133,6 +149,7 @@ namespace recode.net
 
         void ResetToolStripMenuItemClick(object sender, EventArgs e)
 		{
+            // FIXME: update queuedFiles instead of the grid
 			for (int icpt = 0; icpt < lstFiles.Rows.Count; icpt ++) {
             	if (lstFiles.Rows[icpt].Cells[0].Value.ToString() == "error") {
 					lstFiles.Rows[icpt].Cells[0].Value = "ready";
