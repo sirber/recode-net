@@ -16,7 +16,7 @@ namespace recode.net
 	/// </summary>
 	public partial class MainForm : Form
 	{
-		private string version = "2020-03-15 broken";
+		private string version = "2020-03-16";
 
         Encoder encoder;
         BindingList<QueuedFile> queuedFiles = new BindingList<QueuedFile>();
@@ -103,7 +103,14 @@ namespace recode.net
             queuedFile.AudioCodec = cboACodec.Text;
             queuedFile.AudioTrack = cboATrack.SelectedIndex;
             queuedFile.AudioBitrate = int.Parse(txtABitrate.Text);
-
+            switch (cboFResize.SelectedIndex)
+            {
+                case 1: queuedFile.FilteringResizeWidth = 1080; break;
+                case 2: queuedFile.FilteringResizeWidth = 720; break;
+                case 3: queuedFile.FilteringResizeWidth = 480; break;
+                case 4: queuedFile.FilteringResizeWidth = 240; break;
+            }
+            
             lstFiles.Refresh();
 
             // Start and listen to events!

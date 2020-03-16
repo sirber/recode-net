@@ -209,7 +209,7 @@ namespace recode.net.lib
             sCmd += $" -c:a {queuedFile.AudioCodec}";
 
             // Resize
-            switch (queuedFile.FilteringResizeWidth)
+            switch (queuedFile.FilteringResizeWidth) // FIXME: Height!
             {
                 case 1080:
                     sCmd += " -vf scale=1920:1080:force_original_aspect_ratio=decrease";
