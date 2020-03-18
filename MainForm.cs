@@ -21,7 +21,6 @@ namespace recode.net
         Encoder encoder;
         BindingList<QueuedFile> queuedFiles = new BindingList<QueuedFile>();
         QueuedFile queuedFile;
-        string lastMessage = "";
 
         public MainForm()
 		{
