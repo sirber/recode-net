@@ -147,15 +147,23 @@ namespace recode.net
 			toolStripStatusLabel1.Text = msg;	
 		}
 
-        void ResetToolStripMenuItemClick(object sender, EventArgs e)
+        void ResetClick(object sender, EventArgs e)
 		{
-            // FIXME: update queuedFiles instead of the grid
-			for (int icpt = 0; icpt < lstFiles.Rows.Count; icpt ++) {
-            	if (lstFiles.Rows[icpt].Cells[0].Value.ToString() == "error") {
-					lstFiles.Rows[icpt].Cells[0].Value = "ready";
-            	}            	
+            var filesToRemove = queuedFiles.Where(s => s.Status == EncodingStatus.Failed).ToArray();
+            foreach (QueuedFile fileToRemove in filesToRemove)
+            {
+                queuedFiles.Remove(fileToRemove);
             }
-		}
+        }
+
+        void CleanClick(object sender, EventArgs e)
+        {
+            var filesToRetry = queuedFiles.Where(s => s.Status == EncodingStatus.Done).ToArray();
+            foreach (QueuedFile fileToRetry in filesToRetry)
+            {
+                fileToRetry.Status = EncodingStatus.Ready;
+            }
+        }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
