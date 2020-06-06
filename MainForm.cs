@@ -147,18 +147,18 @@ namespace recode.net
 			toolStripStatusLabel1.Text = msg;	
 		}
 
-        void ResetClick(object sender, EventArgs e)
+        void CleanClick(object sender, EventArgs e)
 		{
-            var filesToRemove = queuedFiles.Where(s => s.Status == EncodingStatus.Failed).ToArray();
+            var filesToRemove = queuedFiles.Where(s => s.Status == EncodingStatus.Done).ToArray();
             foreach (QueuedFile fileToRemove in filesToRemove)
             {
                 queuedFiles.Remove(fileToRemove);
             }
         }
 
-        void CleanClick(object sender, EventArgs e)
+        void ResetClick(object sender, EventArgs e)
         {
-            var filesToRetry = queuedFiles.Where(s => s.Status == EncodingStatus.Done).ToArray();
+            var filesToRetry = queuedFiles.Where(s => s.Status == EncodingStatus.Failed).ToArray();
             foreach (QueuedFile fileToRetry in filesToRetry)
             {
                 fileToRetry.Status = EncodingStatus.Ready;
