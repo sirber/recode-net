@@ -16,7 +16,7 @@ namespace recode.net
 	/// </summary>
 	public partial class MainForm : Form
 	{
-		private string version = "2020-03-16";
+		private string version = "2021-03-09";
 
         Encoder encoder;
         BindingList<QueuedFile> queuedFiles = new BindingList<QueuedFile>();

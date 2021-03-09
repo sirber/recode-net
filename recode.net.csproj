@@ -115,7 +115,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="recode.net_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="img\double-arrow-down-512.png" />
