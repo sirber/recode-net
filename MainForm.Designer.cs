@@ -40,8 +40,8 @@ namespace recode.net
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.lstFiles = new System.Windows.Forms.DataGridView();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cleanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetfailed = new System.Windows.Forms.ToolStripMenuItem();
+            this.cleanList = new System.Windows.Forms.ToolStripMenuItem();
             this.cboVCodec = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.cboATrack = new System.Windows.Forms.ComboBox();
@@ -52,6 +52,7 @@ namespace recode.net
             this.cboACodec = new System.Windows.Forms.ComboBox();
             this.txtVBitrate = new System.Windows.Forms.ComboBox();
             this.txtABitrate = new System.Windows.Forms.ComboBox();
+            this.removeSelected = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.lstFiles)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -73,24 +74,25 @@ namespace recode.net
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.resetToolStripMenuItem,
-            this.cleanToolStripMenuItem});
+            this.resetfailed,
+            this.cleanList,
+            this.removeSelected});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(105, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(164, 70);
             // 
-            // resetToolStripMenuItem
+            // resetfailed
             // 
-            this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
-            this.resetToolStripMenuItem.Text = "Reset";
-            this.resetToolStripMenuItem.Click += new System.EventHandler(this.ResetClick);
+            this.resetfailed.Name = "resetfailed";
+            this.resetfailed.Size = new System.Drawing.Size(163, 22);
+            this.resetfailed.Text = "Reset";
+            this.resetfailed.Click += new System.EventHandler(this.ResetClick);
             // 
-            // cleanToolStripMenuItem
+            // cleanList
             // 
-            this.cleanToolStripMenuItem.Name = "cleanToolStripMenuItem";
-            this.cleanToolStripMenuItem.Size = new System.Drawing.Size(104, 22);
-            this.cleanToolStripMenuItem.Text = "Clean";
-            this.cleanToolStripMenuItem.Click += new System.EventHandler(this.CleanClick);
+            this.cleanList.Name = "cleanList";
+            this.cleanList.Size = new System.Drawing.Size(163, 22);
+            this.cleanList.Text = "Clean";
+            this.cleanList.Click += new System.EventHandler(this.CleanClick);
             // 
             // cboVCodec
             // 
@@ -229,6 +231,12 @@ namespace recode.net
             this.txtABitrate.TabIndex = 15;
             this.txtABitrate.Text = "32";
             // 
+            // removeSelected
+            // 
+            this.removeSelected.Name = "removeSelected";
+            this.removeSelected.Size = new System.Drawing.Size(163, 22);
+            this.removeSelected.Text = "Remove selected";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -267,11 +275,12 @@ namespace recode.net
 		private System.Windows.Forms.ComboBox cboVCodec;
 		private System.Windows.Forms.ComboBox cboFResize;
 		private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-		private System.Windows.Forms.ToolStripMenuItem resetToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem cleanToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem resetfailed;
+		private System.Windows.Forms.ToolStripMenuItem cleanList;
         private System.Windows.Forms.ComboBox cboACodec;
         private System.Windows.Forms.ComboBox txtVBitrate;
         private System.Windows.Forms.ComboBox txtABitrate;
         private System.Windows.Forms.DataGridView lstFiles;
+        private System.Windows.Forms.ToolStripMenuItem removeSelected;
     }
 }
