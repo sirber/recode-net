@@ -42,6 +42,7 @@ namespace recode.net
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.resetfailed = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanList = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeSelected = new System.Windows.Forms.ToolStripMenuItem();
             this.cboVCodec = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.cboATrack = new System.Windows.Forms.ComboBox();
@@ -52,7 +53,7 @@ namespace recode.net
             this.cboACodec = new System.Windows.Forms.ComboBox();
             this.txtVBitrate = new System.Windows.Forms.ComboBox();
             this.txtABitrate = new System.Windows.Forms.ComboBox();
-            this.removeSelected = new System.Windows.Forms.ToolStripMenuItem();
+            this.cboOutput = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.lstFiles)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -93,6 +94,12 @@ namespace recode.net
             this.cleanList.Size = new System.Drawing.Size(163, 22);
             this.cleanList.Text = "Clean";
             this.cleanList.Click += new System.EventHandler(this.CleanClick);
+            // 
+            // removeSelected
+            // 
+            this.removeSelected.Name = "removeSelected";
+            this.removeSelected.Size = new System.Drawing.Size(163, 22);
+            this.removeSelected.Text = "Remove selected";
             // 
             // cboVCodec
             // 
@@ -178,7 +185,7 @@ namespace recode.net
             "720p",
             "480p",
             "240p"});
-            this.cboFResize.Location = new System.Drawing.Point(491, 247);
+            this.cboFResize.Location = new System.Drawing.Point(491, 248);
             this.cboFResize.Name = "cboFResize";
             this.cboFResize.Size = new System.Drawing.Size(121, 21);
             this.cboFResize.TabIndex = 12;
@@ -188,7 +195,7 @@ namespace recode.net
             this.cboACodec.FormattingEnabled = true;
             this.cboACodec.Items.AddRange(new object[] {
             "libopus",
-            "libvorvis",
+            "libvorbis",
             "aac"});
             this.cboACodec.Location = new System.Drawing.Point(12, 274);
             this.cboACodec.Name = "cboACodec";
@@ -231,17 +238,25 @@ namespace recode.net
             this.txtABitrate.TabIndex = 15;
             this.txtABitrate.Text = "32";
             // 
-            // removeSelected
+            // cboOutput
             // 
-            this.removeSelected.Name = "removeSelected";
-            this.removeSelected.Size = new System.Drawing.Size(163, 22);
-            this.removeSelected.Text = "Remove selected";
+            this.cboOutput.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboOutput.FormattingEnabled = true;
+            this.cboOutput.Items.AddRange(new object[] {
+            "mkv",
+            "mp4",
+            "webm"});
+            this.cboOutput.Location = new System.Drawing.Point(491, 274);
+            this.cboOutput.Name = "cboOutput";
+            this.cboOutput.Size = new System.Drawing.Size(121, 21);
+            this.cboOutput.TabIndex = 16;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(792, 330);
+            this.Controls.Add(this.cboOutput);
             this.Controls.Add(this.txtABitrate);
             this.Controls.Add(this.txtVBitrate);
             this.Controls.Add(this.cboACodec);
@@ -282,5 +297,6 @@ namespace recode.net
         private System.Windows.Forms.ComboBox txtABitrate;
         private System.Windows.Forms.DataGridView lstFiles;
         private System.Windows.Forms.ToolStripMenuItem removeSelected;
+        private System.Windows.Forms.ComboBox cboOutput;
     }
 }

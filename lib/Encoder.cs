@@ -146,7 +146,8 @@ namespace recode.net.lib
         private string getCommandLine()
         {
             string crf = "-v:crf";
-            string sCmd = $"-hide_banner -hwaccel dxva2 -i \"{queuedFile.FileSource}\""; // TODO: use an array, join with " "
+            // string sCmd = $"-hide_banner -hwaccel dxva2 -i \"{queuedFile.FileSource}\""; // TODO: use an array, join with " "
+            string sCmd = $"-hide_banner -i \"{queuedFile.FileSource}\""; // TODO: use an array, join with " "
 
             // Video
             sCmd += $" -map 0:v:0 -c:v {queuedFile.VideoCodec}";

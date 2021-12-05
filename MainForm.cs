@@ -16,7 +16,7 @@ namespace recode.net
 	/// </summary>
 	public partial class MainForm : Form
 	{
-		private string version = "2021-03-09";
+		private string version = "2021-06-20";
 
         Encoder encoder;
         BindingList<QueuedFile> queuedFiles = new BindingList<QueuedFile>();
@@ -65,6 +65,7 @@ namespace recode.net
 			cboVPreset.SelectedIndex = 0;
 			cboATrack.SelectedIndex = 0;
 			cboFResize.SelectedIndex = 0;
+            cboOutput.SelectedIndex = 0;
 
             // Tooltips
             ToolTip toolTip1 = new ToolTip();
