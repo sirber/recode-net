@@ -16,7 +16,7 @@ namespace recode.net
 	/// </summary>
 	public partial class MainForm : Form
 	{
-		private string version = "2021-06-20";
+		private string version = "2021-12-05";
 
         Encoder encoder;
         BindingList<QueuedFile> queuedFiles = new BindingList<QueuedFile>();
@@ -103,6 +103,10 @@ namespace recode.net
             queuedFile.AudioCodec = cboACodec.Text;
             queuedFile.AudioTrack = cboATrack.SelectedIndex;
             queuedFile.AudioBitrate = int.Parse(txtABitrate.Text);
+
+            queuedFile.OutputContainer = cboOutput.Text;
+            queuedFile.FileDestination = queuedFile.GetDestinationFile();
+
             switch (cboFResize.SelectedIndex)
             {
                 case 1: queuedFile.FilteringResizeWidth = 1080; break;
